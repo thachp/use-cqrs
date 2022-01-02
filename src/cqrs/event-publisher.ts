@@ -1,5 +1,4 @@
-import { Service } from "typedi";
-
+import { Injectable } from "..";
 import { AggregateRoot } from "./aggregate-root";
 import { EventBus } from "./event-bus";
 import { IEvent } from "./interfaces";
@@ -8,7 +7,7 @@ export interface Constructor<T> {
     new (...args: any[]): T;
 }
 
-@Service()
+@Injectable()
 export class EventPublisher<EventBase extends IEvent = IEvent> {
     constructor(private readonly eventBus: EventBus<EventBase>) {}
 

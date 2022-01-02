@@ -1,10 +1,10 @@
-import useCommand from "../command.hook";
-import { ExampleCommand } from "../examples/example.command";
-import { ExampleWithInjectionCommand } from "../examples/examplewithinjection.command";
-import { ExampleWithValidationCommand } from "../examples/examplewithvalidation.command";
-import { ExampleWithValidationInjectionCommand } from "../examples/examplewithvalidationinjection.command";
+import { useCommand } from "../../../command.hook";
+import { ExampleCommand } from "../example.command";
+import { ExampleWithInjectionCommand } from "../examplewithinjection.command";
+import { ExampleWithValidationCommand } from "../examplewithvalidation.command";
+import { ExampleWithValidationInjectionCommand } from "../examplewithvalidationinjection.command";
 
-describe("Command Hook", () => {
+describe("Test Command Hook", () => {
     test("should pass, given the command has no validation nor services injection", async () => {
         // arrange
         const doExample = useCommand(new ExampleCommand("hello", "world"));

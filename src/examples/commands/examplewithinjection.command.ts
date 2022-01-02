@@ -1,9 +1,9 @@
 import { Contains, MaxLength, MinLength } from "class-validator";
-import { Service } from "typedi";
+import { Service as Injectable } from "typedi";
 
-import { ICommand, ICommandHandler } from "../cqrs";
+import { ICommand, ICommandHandler } from "../../cqrs";
 
-@Service()
+@Injectable()
 class ExampleInjectedService {
     printMessage() {
         console.log("I am alive!");
@@ -24,7 +24,7 @@ export class ExampleWithInjectionCommand implements ICommand {
     }
 }
 
-@Service(ExampleWithInjectionCommand.name)
+@Injectable(ExampleWithInjectionCommand.name)
 export class ExampleWithInjectionCommandHandler implements ICommandHandler<ExampleWithInjectionCommand> {
     constructor(public readonly exampleInjectedService: ExampleInjectedService) {}
 

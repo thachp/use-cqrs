@@ -1,7 +1,7 @@
 import { Observable, Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
-import { Container, Service } from "typedi";
 
+import { Injectable, IoC } from "..";
 import { CommandBus } from "./command-bus";
 import { EVENTS_HANDLER_METADATA, SAGA_METADATA } from "./decorators/constants";
 import { InvalidSagaException } from "./exceptions";
@@ -13,7 +13,7 @@ import { isFunction, ObservableBus } from "./utils";
 
 export type EventHandlerType<EventBase extends IEvent = IEvent> = Type<IEventHandler<EventBase>>;
 
-@Service()
+@Injectable()
 export class EventBus<EventBase extends IEvent = IEvent>
     extends ObservableBus<EventBase>
     implements IEventBus<EventBase>
@@ -66,7 +66,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
         const sagas = types
             .map((target) => {
                 const metadata = Reflect.getMetadata(SAGA_METADATA, target) || [];
-                const instance = Container.get(target);
+                const instance = IoC.get(target);
                 if (!instance) {
                     throw new InvalidSagaException();
                 }
@@ -82,7 +82,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
     }
 
     protected registerHandler(handler: EventHandlerType<EventBase>) {
-        const instance = Container.get(handler);
+        const instance = IoC.get(handler);
         if (!instance) {
             return;
         }

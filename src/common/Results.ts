@@ -11,11 +11,12 @@ export class EventResults<TData> extends Results {
     data: TData;
 }
 
-export interface CommandResults<TError> extends Results {
+export interface CommandResults<TError> {
     loading: boolean;
-    errors?: TError | Array<ValidationError>;
+    errors: TError | Array<ValidationError>;
 }
-export interface QueryResults<TData, TError> extends CommandResults<TError> {
-    process: (query: IQuery) => Promise<any>;
+export interface IQueryResults<TData, TError> {
+    loading: boolean;
     data: TData;
+    errors: TError | Array<ValidationError>;
 }

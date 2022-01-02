@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import Container, { Service } from "typedi";
+import { Container as IoC, Service as Injectable } from "typedi";
 
 import { QueryHandlerNotFoundException } from "./exceptions";
 import { DefaultQueryPubSub } from "./helpers/default-query-pubsub";
@@ -13,7 +13,7 @@ export type QueryHandlerType<
     QueryResultBase extends IQueryResult = IQueryResult
 > = Type<IQueryHandler<QueryBase, QueryResultBase>>;
 
-@Service()
+@Injectable()
 export class QueryBus<QueryBase extends IQuery = IQuery>
     extends ObservableBus<QueryBase>
     implements IQueryBus<QueryBase>
@@ -34,7 +34,7 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
     }
 
     async process<T extends QueryBase, TResult = any>(query: T): Promise<TResult> {
-        const handler = Container.get<IQueryHandler>(query.constructor.name);
+        const handler = IoC.get<IQueryHandler>(query.constructor.name);
 
         if (!handler) {
             throw new QueryHandlerNotFoundException(query.constructor.name);

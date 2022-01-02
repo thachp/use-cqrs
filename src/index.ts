@@ -1,13 +1,8 @@
-import { Service } from "typedi";
+export * from "./command.hook";
+export * from "./event.hook";
+export * from "./query.hook";
 
-import useCommand from "./command.hook";
-import useEvent from "./event.hook";
-import useQuery from "./query.hook";
+export * from "./common/Results";
+export { Container as IoC, Service as Injectable } from "typedi";
 
 // export the hooks
-export default {
-    Service,
-    useCommand,
-    useEvent,
-    useQuery
-};

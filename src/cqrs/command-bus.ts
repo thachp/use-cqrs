@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { Container, Service } from "typedi";
+import { Container as IoC, Service as Injectable } from "typedi";
 
 import { CommandHandlerNotFoundException } from "./exceptions/command-not-found.exception";
 import { DefaultCommandPubSub } from "./helpers/default-command-pubsub";
@@ -10,7 +10,7 @@ import { ObservableBus } from "./utils/observable-bus";
 
 export type CommandHandlerType = Type<ICommandHandler<ICommand>>;
 
-@Service()
+@Injectable()
 export class CommandBus<CommandBase extends ICommand = ICommand>
     extends ObservableBus<CommandBase>
     implements ICommandBus<CommandBase>
@@ -31,7 +31,7 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
     }
 
     execute<T extends CommandBase, R = any>(command: T): Promise<R> {
-        const handler = Container.get<ICommandHandler>(command.constructor.name);
+        const handler = IoC.get<ICommandHandler>(command.constructor.name);
 
         if (!handler) {
             throw new CommandHandlerNotFoundException(command.constructor.name);

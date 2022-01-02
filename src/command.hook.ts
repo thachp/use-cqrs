@@ -1,7 +1,7 @@
 import { validate, ValidatorOptions } from "class-validator";
-import { useState } from "react";
 import Container from "typedi";
 
+import { CommandResults } from "./common/Results";
 import { CommandBus, ICommand } from "./cqrs";
 
 /**
@@ -10,10 +10,13 @@ import { CommandBus, ICommand } from "./cqrs";
  * @returns CommandResults
  */
 
-const useCommand = <T>(command: ICommand, validatorOptions?: ValidatorOptions): Function => {
+export const useCommand = <TError>(
+    command: ICommand,
+    validatorOptions?: ValidatorOptions
+): (() => Promise<CommandResults<TError>>) => {
     const commandBus = Container.get(CommandBus);
 
-    // lazy call the success and error handlers
+    // lazy call to the command bus with field validation
     const execute = async () => {
         const errors = await validate(command, validatorOptions);
 

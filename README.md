@@ -33,7 +33,7 @@ yarn add @thachp/use-cqrs
 
 
 ### How it works?
-TBD
+![arch](https://user-images.githubusercontent.com/1495371/147891754-7809ce1c-1478-4e88-9b10-fe50d0129b5a.png)
 
 
 ### Examples
@@ -52,13 +52,13 @@ export interface ExampleQueryDataItem {
 // Support dependency injection
 @Injectable()
 class ExampleValidationInjectedService {
-    printMessage() {
+    doSomething() {
         console.log("I am alive!");
     }
 }
 
 // Support field validation
-// Skip must have a minimum value of 0.
+// Skip must have a minimum value of 0
 // Take must have a minimum value of 0 and max at 10
 export class ExampleValidationQuery implements IQuery {
     @Min(0)
@@ -86,7 +86,7 @@ export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValid
         const { skip, take } = query;
 
         // invoke injected service class
-        this.exampleInjectedService.printMessage();
+        this.exampleInjectedService.doSomething();
 
         // samples
         const data: Array<ExampleQueryDataItem> = [

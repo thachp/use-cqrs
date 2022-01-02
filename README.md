@@ -1,5 +1,5 @@
-# use-cqrs
-USE-CQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in front-end development. It consists of three react hooks: useCommand, useQuery, and useEvent(). 
+# useCQRS
+useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand, useQuery, and useEvent(). 
 
 - The useCommand() hook tells your server to do something.  
 - The useQuery() hook gets something from the server.  
@@ -8,16 +8,16 @@ USE-CQRS is a React hooks library for applying CQRS design patterns and Single R
 ### Goals & Intentions
 This package will be considered a success if the following goals are achieved.  
 
-1. More ubiquitous language between front-end and back-end development; front-end and back-end developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing user-friendly interfaces and user experiences. 
+1. More ubiquitous language between frontend and backend development; frontend and backend developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces and improving higher user experiences. 
 
     Avoid using HTTP verbs; get, post, put, delete, and patch to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
 
-2. Apply Single Responsible Principle (SRP) in developing React components. SRP is one of the SOLID principles, which dictate that a class must only do one thing and do it well.   A React component using CQRS must, upon a user’s action, tell the server to do something or get something from the server, but never both. 
+2. Apply Single Responsible Principle (SRP) in developing React components. SRP is one of the SOLID principles, which dictate that a "module should be responsible to one, and only one, actor." A react component using CQRS must, upon a user’s action, tell the server to do something or get something from the server, but never both. 
   
      - A component must use either the useCommand() or useQuery hook but never both hooks.  
-     - A component may use multiple useEvent() in one component, but keep the count minimal.
+     - A component may use multiple useEvent() but keep the count minimal.
 
-3. For more front-end developers to consider CQRS patterns and domain design principles in their frontend application, because its benefits are great.  Frontend application too can achieve simplicity!
+3. For more frontend developers to consider CQRS patterns and domain design principles in their frontend application, because its benefits are great.  Frontend applications,too, could achieve maintainability and simplicity!
 
 ### Installing
 
@@ -38,7 +38,7 @@ TBD
 
 ### Examples
 
-Write two classes for Query and QueryHandler classes. Each query, command, and event must have its corresponding handler.
+Each query, command, and event must have its corresponding handler. Below are example of classes for query and its handler. Validation decorators can be used to perform field validation.  Services classes could also be injected into the handler.
 
 ```typescript
 import { IQuery, IQueryHandler, Injectable } from "@thachp/use-cqrs";
@@ -58,12 +58,12 @@ class ExampleValidationInjectedService {
 }
 
 // Support field validation
+// Skip must have a minimum value of 0.
+// Take must have a minimum value of 0 and max at 10
 export class ExampleValidationQuery implements IQuery {
-    @IsNumber()
     @Min(0)
     public readonly skip: number;
 
-    @IsNumber()
     @Max(10)
     @Min(0)
     public readonly take: number;
@@ -78,8 +78,10 @@ export class ExampleValidationQuery implements IQuery {
 @Injectable(ExampleValidationQuery.name)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
 
-constructor(public readonly exampleInjectedService: ExampleValidationInjectedService) {}
+    // ExampleValidationInjectedService is injectable
+    constructor(public readonly exampleInjectedService: ExampleValidationInjectedService) {}
 
+    // business logic here
     async process(query: ExampleValidationQuery) {
         const { skip, take } = query;
 
@@ -121,7 +123,8 @@ import {ExampleValidationQuery} from "../examplevalidation.query"
 
 export const ExampleQueryComponent = () => {
 
-    // call the useQuery hook and lazy query with process
+    // use the useQuery hook by passing an instant of the ExampleValidation object.
+    // Deconstruct `process` for when the user click on the More button. 
     const [{ loading, errors, data }, process] = useQuery<[{id: string, name: string}], any>(new ExampleValidationQuery(0, 1));
 
     if (errors && errors.length > 0) {
@@ -151,9 +154,16 @@ export const ExampleQueryComponent = () => {
 };
 ```
 
-### Dependencies
-useCQRS is dependent on the following main modules:
+### Contributing
+- Fork and Pull
+- Use TDD approach to development
+- Don't override Prettier 
+- Use camelCase
 
+### Dependencies
+useCQRS is dependent on the following modules:
+
+- [ReactJS](https://github.com/facebook/react) A declarative, efficient, and flexible JavaScript library for building user interfaces.
 - [TypeDI](https://github.com/typestack/typedi) Simple yet powerful dependency injection tool for JavaScript and TypeScript.
 - [Class-validator](https://github.com/typestack/class-validator) Decorator-based property validation for classes.
 - [RxJS](https://github.com/ReactiveX/rxjs) A reactive programming library for JavaScript
@@ -162,5 +172,8 @@ useCQRS is dependent on the following main modules:
 TBD
 
 ### Credits
-Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the frontend in ReactJS hooks.
+Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the frontend as ReactJS hooks.
 Thanks @[Kamil](https://github.com/kamilmysliwiec)
+
+### License
+useCQRS is MIT licensed.

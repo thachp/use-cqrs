@@ -220,7 +220,7 @@ useCQRS is dependent on the following modules:
 
 ### Credits
 Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the frontend as ReactJS hooks.
-Thanks @[Kamil](https://github.com/kamilmysliwiec)
+Thanks [@kamilmysliwiec](https://github.com/kamilmysliwiec)
 
 ### License
 useCQRS is [MIT](https://github.com/thachp/use-cqrs/blob/main/LICENSE) licensed.

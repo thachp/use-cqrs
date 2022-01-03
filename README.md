@@ -1,3 +1,5 @@
+![build](https://github.com/thachp/use-cqrs/actions/workflows/main.yml/badge.svg)
+
 # useCQRS
 useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent(). 
 

@@ -69,7 +69,7 @@ execute(new WhateverCommand(value))
 
 React to something with useEvent()
 ```typescript
-// setup and react to changes
+// setup and destructure
 const [event, emit] = useEvent<WhateverDataType>(new WhateverChanged()); 
 
 // optionally, invoke emit to publish an event

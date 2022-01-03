@@ -14,7 +14,7 @@ This package will be considered a success if the following goals are achieved.
 
     Avoid using HTTP / CRUD verbs to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences (Khorikov, 2018).
 
-2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor. (Martin, 2018)" A react component using CQRS must either do something or ask something, but never both. 
+2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor. (Martin, 2017)" A react component using CQRS must either do something or ask something, but never both. 
   
      - A component must use either the useCommand() or useQuery hook but never both hooks.  
      - A component may use multiple useEvent() but keep the count minimal.
@@ -215,7 +215,7 @@ useCQRS is dependent on the following modules:
 - Fowler, M. (2011, July 14). bliki: CQRS. Martinfowler.Com. Retrieved January 3, 2022, from https://martinfowler.com/bliki/CQRS.html
 - Garofolo, E. (2020). Practical Microservices: Build Event-Driven Architectures with Event Sourcing and CQRS (1st ed.). Pragmatic Bookshelf.
 - Greg Young - CQRS and Event Sourcing - Code on the Beach 2014. (2014, September 8). [Video]. YouTube. https://www.youtube.com/watch?v=JHGkaShoyNs
-- Martin, R. C., O’Brien, T., & Books, U. (2021). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Upfront Books.
+- Martin, R. C., O’Brien, T., & Books, U. (2017). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Upfront Books.
 - Khorikov, V. (2018, October 18). CQRS in Practice. Pluralsight.com. Retrieved January 3, 2022, from https://www.pluralsight.com/courses/cqrs-in-practice?aid=7010a000001xAKZAA2
 
 ### Credits

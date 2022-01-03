@@ -48,7 +48,7 @@ Add these settings to your tsconfig.json
 Ask something with useQuery()
 ```typescript    
 // setup, invoke, and destructure
-const [{data, error, loading}, process] = useQuery<WhateverDataType, WhateverErrorType>(new WhateverQuery(value));  
+const [{data, error, loading}, process] = useQuery<DataType, ErrorType>(new WhateverQuery(value));  
 
 // optionally, invoke process to lazy load
 process(new WhateverQuery(newValue))
@@ -57,9 +57,9 @@ process(new WhateverQuery(newValue))
 Do something with useCommand()
 ```typescript
 // setup and destructure
-const [{error, loading}, execute] = useCommand<WhateverErrorType>(new WhateverCommand(value));        
+const [{error, loading}, execute] = useCommand<ErrorType>(new WhateverCommand(value));        
 or 
-const [{error, loading}, execute] = useCommand<WhateverErrorType>();      
+const [{error, loading}, execute] = useCommand<ErrorType>();      
 
 // invoke execute to do something
 execute()
@@ -70,7 +70,7 @@ execute(new WhateverCommand(value))
 React to something with useEvent()
 ```typescript
 // setup and destructure
-const [event, emit] = useEvent<WhateverDataType>(new WhateverChanged()); 
+const [event, emit] = useEvent<DataType>(new WhateverChanged()); 
 
 // optionally, invoke emit to publish an event
 emit(new SomethingChanged())

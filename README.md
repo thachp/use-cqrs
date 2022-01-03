@@ -8,18 +8,18 @@ useCQRS is a React hooks library for applying CQRS design patterns and Single Re
 ### Goals & Intentions
 This package will be considered a success if the following goals are achieved.  
 
-1. More ubiquitous language between frontend and backend development; frontend and backend developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences. 
+1. For more ubiquitous language between frontend and backend development, frontend and backend developers use the same domain-driven verbs and nouns in all application layers. 
 
       ![goodbad](https://user-images.githubusercontent.com/1495371/147892717-a2885610-18cf-412d-9f51-acd3c665f60c.png)
 
-    Avoid using HTTP / CRUD verbs to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
+    Avoid using HTTP / CRUD verbs to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences.
 
 2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor." A react component using CQRS must either do something or ask something, but never both. 
   
      - A component must use either the useCommand() or useQuery hook but never both hooks.  
      - A component may use multiple useEvent() but keep the count minimal.
 
-3. For more frontend developers to consider CQRS patterns and domain design principles in their frontend application, because its benefits are great.  Frontend applications,too, could achieve maintainability and simplicity!
+3. For more frontend developers to consider CQRS patterns and domain design principles, frontend applications achieve higher maintainability and simplicity when CQRS is used.
 
 ### Installing
 
@@ -48,7 +48,7 @@ Add these settings to your tsconfig.json
 Ask something with useQuery()
 ```typescript    
 // setup, invoke, and destructure
-const [{data, error, loading}, process] = useQuery<dataType, errorType>(new WhateverQuery(value));  
+const [{data, error, loading}, process] = useQuery<DataType, ErrorType>(new WhateverQuery(value));  
 
 // optionally, invoke process to lazy load
 process(new WhateverQuery(newValue))
@@ -57,9 +57,9 @@ process(new WhateverQuery(newValue))
 Do something with useCommand()
 ```typescript
 // setup and destructure
-const [{error, loading}, execute] = useCommand<errorType>(new WhateverCommand(value));        
+const [{error, loading}, execute] = useCommand<ErrorType>(new WhateverCommand(value));        
 or 
-const [{error, loading}, execute] = useCommand<errorType>();      
+const [{error, loading}, execute] = useCommand<ErrorType>();      
 
 // invoke execute to do something
 execute()
@@ -70,7 +70,7 @@ execute(new WhateverCommand(value))
 React to something with useEvent()
 ```typescript
 // setup and react to changes
-const event = useEvent<dataType>(new WhateverChanged());        
+const event = useEvent<dataType>(new WhateverChanged()); 
 ```
 
 ### How it works?

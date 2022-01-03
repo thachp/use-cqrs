@@ -196,7 +196,7 @@ export const ExampleQueryComponent = () => {
 ```
 
 ### Contributing
-- Do Fork and Pull
+- Do Fork and Pull to the develop branch
 - Do apply TDD approach to development
 - Do use camelCase
 - Do not override Prettier configuration 

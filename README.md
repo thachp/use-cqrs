@@ -1,18 +1,20 @@
 # useCQRS
 useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand, useQuery, and useEvent(). 
 
-- The useCommand() hook tells your server to do something.  
-- The useQuery() hook gets something from the server.  
-- The useEvent() hook reacts to what the server has done.
+- The useCommand() hook tells the server to do something.  
+- The useQuery() hook ask something from the server.  
+- The useEvent() hook reacts to what has done.
 
 ### Goals & Intentions
 This package will be considered a success if the following goals are achieved.  
 
-1. More ubiquitous language between frontend and backend development; frontend and backend developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces and improving higher user experiences. 
+1. More ubiquitous language between frontend and backend development; frontend and backend developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (ui / api) and improving user experiences. 
+
+      ![goodbad](https://user-images.githubusercontent.com/1495371/147892717-a2885610-18cf-412d-9f51-acd3c665f60c.png)
 
     Avoid using HTTP verbs; get, post, put, delete, and patch to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
 
-2. Apply Single Responsible Principle (SRP) in developing React components. SRP is one of the SOLID principles, which dictate that a "module should be responsible to one, and only one, actor." A react component using CQRS must, upon a user’s action, tell the server to do something or get something from the server, but never both. 
+2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor." A react component using CQRS must, upon a user’s action, tell the server to do something or get something from the server, but never both. 
   
      - A component must use either the useCommand() or useQuery hook but never both hooks.  
      - A component may use multiple useEvent() but keep the count minimal.
@@ -30,6 +32,35 @@ Using yarn
 ```bash
 yarn add @thachp/use-cqrs
 ```
+
+### Getting started
+
+Ask something with useQuery()
+
+```typescript    
+// setup, invoke, and destructure
+const [{data, error, loading}, process] = useQuery<dataType, errorType>(new WhateverQuery(value,value2));  
+
+// optionally, invoke process to lazy load
+process(new WhateverQuery(newValue1,newValue2))
+```
+
+Do something with useCommand()
+```typescript
+// setup and destructure
+const [{error, loading}, execute] = useCommand<errorType>(new WhateverCommand(value,value2, value3));        
+
+// invoke execute to do something
+execute()
+
+```
+
+React to something with useEvent()
+```typescript
+// setup, listen, and destructure
+const event = useEvent<dataType>(new WhateverChanged());        
+```
+
 
 
 ### How it works?
@@ -155,10 +186,10 @@ export const ExampleQueryComponent = () => {
 ```
 
 ### Contributing
-- Fork and Pull
-- Use TDD approach to development
-- Don't override Prettier 
-- Use camelCase
+- Do Fork and Pull
+- Do apply TDD approach to development
+- Do use camelCase
+- Do not override Prettier configuration 
 
 ### Dependencies
 useCQRS is dependent on the following modules:

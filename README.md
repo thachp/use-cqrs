@@ -1,5 +1,5 @@
 # useCQRS
-useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand, useQuery, and useEvent(). 
+useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent(). 
 
 - The useCommand() hook does something.  
 - The useQuery() hook ask for something.  
@@ -14,7 +14,7 @@ This package will be considered a success if the following goals are achieved.
 
     Avoid using HTTP verbs; get, post, put, delete, and patch to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
 
-2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor." A react component using CQRS must, upon a user’s action, tell the server to do something or get something from the server, but never both. 
+2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor." A react component using CQRS must either do something or ask something, but never both. 
   
      - A component must use either the useCommand() or useQuery hook but never both hooks.  
      - A component may use multiple useEvent() but keep the count minimal.
@@ -39,20 +39,25 @@ Ask something with useQuery()
 
 ```typescript    
 // setup, invoke, and destructure
-const [{data, error, loading}, process] = useQuery<dataType, errorType>(new WhateverQuery(value,value2));  
+const [{data, error, loading}, process] = useQuery<dataType, errorType>(new WhateverQuery(value));  
 
 // optionally, invoke process to lazy load
-process(new WhateverQuery(newValue1,newValue2))
+process(new WhateverQuery(newValue))
 ```
 
 Do something with useCommand()
 ```typescript
 // setup and destructure
-const [{error, loading}, execute] = useCommand<errorType>(new WhateverCommand(value,value2));        
+const [{error, loading}, execute] = useCommand<errorType>(new WhateverCommand(value));        
+or 
+const [{error, loading}, execute] = useCommand<errorType>();      
 
 // invoke execute to do something
 execute()
-
+or 
+execute(new WhateverCommand(value))
+or 
+execute(new WhateverCommand(value2))
 ```
 
 React to something with useEvent()
@@ -156,7 +161,7 @@ export const ExampleQueryComponent = () => {
 
     // use the useQuery hook by passing an instant of the ExampleValidation object.
     // Deconstruct `process` for when the user click on the More button. 
-    const [{ loading, errors, data }, process] = useQuery<[{id: string, name: string}], any>(new ExampleValidationQuery(0, 1));
+    const [{ loading, errors, data }, process] = useQuery<any, any>(new ExampleValidationQuery(0, 1));
 
     if (errors && errors.length > 0) {
         return <div>Errors...</div>;
@@ -200,7 +205,13 @@ useCQRS is dependent on the following modules:
 - [RxJS](https://github.com/ReactiveX/rxjs) A reactive programming library for JavaScript
 
 ### References
-TBD
+
+- Dominguez, J., Melnik, G., Simonazzi, F., Subramanian, M., & Betts, D. (2012). Exploring CQRS and Event Sourcing (Microsoft patterns & practices) (1st ed.). Microsoft.
+- Fowler, M. (2011, July 14). bliki: CQRS. Martinfowler.Com. Retrieved January 3, 2022, from https://martinfowler.com/bliki/CQRS.html
+- Garofolo, E. (2020). Practical Microservices: Build Event-Driven Architectures with Event Sourcing and CQRS (1st ed.). Pragmatic Bookshelf.
+- Greg Young - CQRS and Event Sourcing - Code on the Beach 2014. (2014, September 8). [Video]. YouTube. https://www.youtube.com/watch?v=JHGkaShoyNs
+- Martin, R. C., O’Brien, T., & Books, U. (2021). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Upfront Books.
+- Pluralsight. (2018, October 18). CQRS in Practice. Pluralsight.com. Retrieved January 3, 2022, from https://www.pluralsight.com/courses/cqrs-in-practice?aid=7010a000001xAKZAA2
 
 ### Credits
 Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the frontend as ReactJS hooks.

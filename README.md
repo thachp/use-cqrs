@@ -1,14 +1,14 @@
 # useCQRS
 useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand, useQuery, and useEvent(). 
 
-- The useCommand() hook tells the server to do something.  
-- The useQuery() hook ask something from the server.  
-- The useEvent() hook reacts to what has done.
+- The useCommand() hook does something.  
+- The useQuery() hook ask for something.  
+- The useEvent() hook reacts to what has been done.
 
 ### Goals & Intentions
 This package will be considered a success if the following goals are achieved.  
 
-1. More ubiquitous language between frontend and backend development; frontend and backend developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (ui / api) and improving user experiences. 
+1. More ubiquitous language between frontend and backend development; frontend and backend developers use the same domain-driven verbs and nouns in all layers on their application. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences. 
 
       ![goodbad](https://user-images.githubusercontent.com/1495371/147892717-a2885610-18cf-412d-9f51-acd3c665f60c.png)
 
@@ -48,7 +48,7 @@ process(new WhateverQuery(newValue1,newValue2))
 Do something with useCommand()
 ```typescript
 // setup and destructure
-const [{error, loading}, execute] = useCommand<errorType>(new WhateverCommand(value,value2, value3));        
+const [{error, loading}, execute] = useCommand<errorType>(new WhateverCommand(value,value2));        
 
 // invoke execute to do something
 execute()
@@ -57,15 +57,14 @@ execute()
 
 React to something with useEvent()
 ```typescript
-// setup, listen, and destructure
+// setup and react to changes
 const event = useEvent<dataType>(new WhateverChanged());        
 ```
 
 
 
 ### How it works?
-![arch](https://user-images.githubusercontent.com/1495371/147891754-7809ce1c-1478-4e88-9b10-fe50d0129b5a.png)
-
+![arch](https://user-images.githubusercontent.com/1495371/147893504-42a50f72-293a-4dc0-bf29-3c5a568f36f6.png)
 
 ### Examples
 
@@ -104,6 +103,7 @@ export class ExampleValidationQuery implements IQuery {
         this.take = take;
     }
 }
+
 
 // Register the handler, so useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
 @Injectable(ExampleValidationQuery.name)

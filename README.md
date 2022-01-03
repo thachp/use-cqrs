@@ -19,7 +19,7 @@ This package will be considered a success if the following goals are achieved.
      - A component must use either the useCommand() or useQuery hook but never both hooks.  
      - A component may use multiple useEvent() but keep the count minimal.
 
-3. For more frontend developers to consider CQRS patterns and domain design principles, frontend applications achieve higher maintainability and simplicity when CQRS is used.
+3. For more frontend developers to consider CQRS patterns and domain design principles, frontend applications achieve higher marks for maintainability and simplicity when CQRS is used.
 
 ### Installing
 

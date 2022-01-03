@@ -204,9 +204,9 @@ export const ExampleQueryComponent = () => {
 ### Dependencies
 useCQRS is dependent on the following modules:
 
-- [ReactJS](https://github.com/facebook/react) A declarative, efficient, and flexible JavaScript library for building user interfaces.
-- [TypeDI](https://github.com/typestack/typedi) Simple yet powerful dependency injection tool for JavaScript and TypeScript.
-- [Class-validator](https://github.com/typestack/class-validator) Decorator-based property validation for classes.
+- [ReactJS](https://github.com/facebook/react) A declarative, efficient, and flexible JavaScript library for building user interfaces
+- [TypeDI](https://github.com/typestack/typedi) Simple yet powerful dependency injection tool for JavaScript and TypeScript
+- [Class-validator](https://github.com/typestack/class-validator) Decorator-based property validation for classes
 - [RxJS](https://github.com/ReactiveX/rxjs) A reactive programming library for JavaScript
 
 ### References

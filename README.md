@@ -1,9 +1,9 @@
 # useCQRS
 useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent(). 
 
-- The useCommand() hook does something.  
-- The useQuery() hook ask for something.  
-- The useEvent() hook reacts to what has been done.
+- Use the useCommand() hook to do something  
+- Use the useQuery() hook to ask for something  
+- Use the useEvent() hook to react to what has been done
 
 ### Goals & Intentions
 This package will be considered a success if the following goals are achieved.  
@@ -12,7 +12,7 @@ This package will be considered a success if the following goals are achieved.
 
       ![goodbad](https://user-images.githubusercontent.com/1495371/147892717-a2885610-18cf-412d-9f51-acd3c665f60c.png)
 
-    Avoid using HTTP verbs; get, post, put, delete, and patch to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
+    Avoid using HTTP / CRUD verbs to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
 
 2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor." A react component using CQRS must either do something or ask something, but never both. 
   
@@ -33,10 +33,19 @@ Using yarn
 yarn add @thachp/use-cqrs
 ```
 
+Add these settings to your tsconfig.json
+```json
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
+```
+
 ### Getting started
 
 Ask something with useQuery()
-
 ```typescript    
 // setup, invoke, and destructure
 const [{data, error, loading}, process] = useQuery<dataType, errorType>(new WhateverQuery(value));  
@@ -56,8 +65,6 @@ const [{error, loading}, execute] = useCommand<errorType>();
 execute()
 or 
 execute(new WhateverCommand(value))
-or 
-execute(new WhateverCommand(value2))
 ```
 
 React to something with useEvent()
@@ -65,8 +72,6 @@ React to something with useEvent()
 // setup and react to changes
 const event = useEvent<dataType>(new WhateverChanged());        
 ```
-
-
 
 ### How it works?
 ![arch](https://user-images.githubusercontent.com/1495371/147893504-42a50f72-293a-4dc0-bf29-3c5a568f36f6.png)
@@ -84,7 +89,7 @@ export interface ExampleQueryDataItem {
     name: string;
 }
 
-// Support dependency injection
+// Support dependency injection of classes, token
 @Injectable()
 class ExampleValidationInjectedService {
     doSomething() {
@@ -218,4 +223,4 @@ Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/c
 Thanks @[Kamil](https://github.com/kamilmysliwiec)
 
 ### License
-useCQRS is MIT licensed.
+useCQRS is [MIT](https://github.com/thachp/use-cqrs/blob/main/LICENSE) licensed.

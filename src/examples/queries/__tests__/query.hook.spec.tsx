@@ -2,13 +2,15 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import * as React from "react";
 
 import { ExampleQueryComponent } from "../components/ExampleQuery.component";
+import { ExampleValidationInjectionComponent } from "../components/ExampleValidationInjectionQuery.component";
 import { ExampleValidationComponent } from "../components/ExampleValidationQuery.component";
 
 describe("Test Query Hook with various component types", () => {
-    test("test initial load, should return one item", async () => {
+    test("should return one item on initial render", async () => {
         // arrange && act
-        // initially will load one item
         await act(async () => render(<ExampleQueryComponent />));
+
+        await waitFor(() => screen.getByText(/John/));
 
         // assert
         expect(screen.getByText(/ExampleQueryComponent/)).toBeTruthy();
@@ -24,6 +26,7 @@ describe("Test Query Hook with various component types", () => {
 
         // assert
         await waitFor(() => screen.getByText(/John/));
+
         expect(screen.getByText(/John/)).toBeTruthy();
         expect(screen.getByText(/Sally/)).toBeTruthy();
     });
@@ -32,7 +35,17 @@ describe("Test Query Hook with various component types", () => {
         // arrange & act
         await act(async () => render(<ExampleValidationComponent />));
 
-        // act
+        // assert
         expect(screen.getByText(/Errors.../)).toBeTruthy();
+    });
+
+    test("should return 3 items from example service", async () => {
+        // arrange & act
+        await act(async () => render(<ExampleValidationInjectionComponent />));
+
+        // assert
+        expect(screen.getByText(/John/)).toBeTruthy();
+        expect(screen.getByText(/Jane/)).toBeTruthy();
+        expect(screen.getByText(/Joe/)).toBeTruthy();
     });
 });

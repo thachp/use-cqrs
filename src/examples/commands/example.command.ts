@@ -20,10 +20,5 @@ export class ExampleCommandHandler implements ICommandHandler<ExampleCommand> {
         const { hello, name } = command;
 
         console.log("example-command", hello, name);
-
-        return {
-            loading: false,
-            errors: []
-        };
     }
 }

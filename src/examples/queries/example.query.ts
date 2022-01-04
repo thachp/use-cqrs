@@ -40,10 +40,6 @@ export class ExampleQueryHandler implements IQueryHandler<ExampleQuery> {
         }
 
         // return the data
-        return {
-            loading: false,
-            data,
-            errors: []
-        };
+        return data;
     }
 }

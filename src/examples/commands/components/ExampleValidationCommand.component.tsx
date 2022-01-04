@@ -6,12 +6,12 @@ import { ExampleWithValidationCommand } from "../examplewithvalidation.command";
 
 export const ExampleValidationCommandComponent = () => {
     // setup command hook
-    const [{ loading, errors }, command] = useCommand<[ValidationError]>(
+    const [{ loading, error }, command] = useCommand<[ValidationError]>(
         new ExampleWithValidationCommand("Wazzup", "1")
     );
 
     // if errors, display them
-    if (errors && errors.length > 0) {
+    if (error) {
         return <div data-testid="errors">Errors...</div>;
     }
 

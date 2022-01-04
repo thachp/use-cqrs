@@ -6,7 +6,7 @@ import { CommandBus, ICommand } from "./cqrs";
 
 export interface ICommandResults<TError> {
     loading: boolean;
-    errors: TError | Array<ValidationError>;
+    error: TError | Array<ValidationError>;
 }
 
 /**
@@ -20,13 +20,13 @@ export const useCommand = <TError = [ValidationError]>(
     validatorOptions?: ValidatorOptions
 ): [ICommandResults<TError>, (command?: ICommand) => Promise<void>] => {
     // initialize state with loading to true
-    const [results, setResults] = React.useState<ICommandResults<TError>>({
+    const [result, setResult] = React.useState<ICommandResults<TError>>({
         loading: false,
-        errors: []
+        error: null
     });
 
     const ref = React.useRef({
-        results,
+        result,
         validatorOptions,
         isMounted: true
     });
@@ -36,11 +36,11 @@ export const useCommand = <TError = [ValidationError]>(
     const execute = React.useCallback(async (command?: ICommand) => {
         const commandToExecute = command || initialCommand;
 
-        if (!ref.current.results.loading) {
-            setResults(
-                (ref.current.results = {
+        if (!ref.current.result.loading) {
+            setResult(
+                (ref.current.result = {
                     loading: true,
-                    errors: []
+                    error: null
                 })
             );
         }
@@ -50,28 +50,43 @@ export const useCommand = <TError = [ValidationError]>(
 
         // if there are errors, set the state to the errors
         if (errors.length > 0) {
-            setResults(
-                (ref.current.results = {
+            setResult(
+                (ref.current.result = {
                     loading: false,
-                    errors
+                    error: errors
                 })
             );
             return;
         }
 
         // set loading state
-        setResults(
-            (ref.current.results = {
-                errors: [],
+        setResult(
+            (ref.current.result = {
+                error: null,
                 loading: true
             })
         );
 
         // send the command to the command bus
-        const results = await commandBus.execute(commandToExecute);
+        try {
+            await commandBus.execute(commandToExecute);
 
-        // set the state to the results
-        setResults(results);
+            // set the state to the command results
+            setResult(
+                (ref.current.result = {
+                    error: null,
+                    loading: false
+                })
+            );
+        } catch (error: any) {
+            // if there is an error, set the state to the error
+            setResult(
+                (ref.current.result = {
+                    error,
+                    loading: false
+                })
+            );
+        }
     }, []);
 
     React.useEffect(
@@ -81,7 +96,7 @@ export const useCommand = <TError = [ValidationError]>(
         []
     );
 
-    return [results, execute];
+    return [result, execute];
 };
 
 export default useCommand;

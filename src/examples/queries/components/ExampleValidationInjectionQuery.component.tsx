@@ -1,11 +1,13 @@
 import * as React from "react";
 
 import { useQuery } from "../../../query.hook";
-import { ExampleQuery, ExampleQueryDataItem } from "../example.query";
+import { ExampleValidationInjectionQuery } from "../examplewithvalidationinjection.query";
 
-export const ExampleQueryComponent = () => {
+export const ExampleValidationInjectionComponent = () => {
     // Query hook
-    const [{ loading, error, data }, process] = useQuery<[ExampleQueryDataItem], any>(new ExampleQuery(0, 1));
+    const [{ loading, error, data }] = useQuery<{ skip: number; take: number; records: Array<any> }, any>(
+        new ExampleValidationInjectionQuery(0, 10)
+    );
 
     if (error) {
         return <div>Errors...</div>;
@@ -17,14 +19,11 @@ export const ExampleQueryComponent = () => {
 
     return (
         <div>
-            <h1>{ExampleQueryComponent.name}</h1>
-            <button id="more" onClick={() => process(new ExampleQuery(0, 2))}>
-                More
-            </button>
+            <h1>{ExampleValidationInjectionComponent.name}</h1>
             <ul>
                 {!data && <li>No data</li>}
                 {data &&
-                    data.map((item) => (
+                    data.records.map((item) => (
                         <li key={item.id}>
                             {item.id} - {item.name}
                         </li>

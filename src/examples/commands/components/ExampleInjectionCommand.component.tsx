@@ -5,23 +5,12 @@ import { ExampleWithInjectionCommand } from "../examplewithinjection.command";
 
 export const ExampleWithInjectionComponent = () => {
     // Command hook
-    const [{ loading, errors }, command] = useCommand<
-        [
-            {
-                type: string;
-                message: string;
-            }
-        ]
-    >(new ExampleWithInjectionCommand("Hello", "World"));
+    const [{ loading, error }, command] = useCommand<any>(new ExampleWithInjectionCommand("Hello", "World"));
 
-    if (errors && errors.length > 0) {
+    if (error) {
         return (
             <div data-testid="errors">
-                {errors.map((error: any, index: number) => (
-                    <div key={index}>
-                        {error.type} : {error.message}
-                    </div>
-                ))}
+                <div>{error.message}</div>
             </div>
         );
     }

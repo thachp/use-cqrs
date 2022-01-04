@@ -23,11 +23,6 @@ export class ExampleWithValidationCommandHandler implements ICommandHandler<Exam
 
     async execute(command: ExampleWithValidationCommand) {
         const { hello, name } = command;
-
         console.log("example-command-withvalidation", hello, name);
-
-        return {
-            loading: false
-        };
     }
 }

@@ -26,18 +26,9 @@ export class ExampleWithInjectionCommandHandler implements ICommandHandler<Examp
     async execute(command: ExampleWithInjectionCommand) {
         const { hello, name } = command;
 
-        // call injected service
-        try {
-            this.exampleInjectedService.doSomething();
-        } catch (error) {
-            return {
-                loading: false,
-                errors: [error]
-            };
-        }
+        console.log("example-command-withinjection", hello, name);
 
-        return {
-            loading: false
-        };
+        // call injected service
+        this.exampleInjectedService.doSomething();
     }
 }

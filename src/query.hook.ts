@@ -7,7 +7,7 @@ import { IQuery, QueryBus } from "./cqrs";
 export interface IQueryResults<TData, TError> {
     loading: boolean;
     data: TData;
-    errors: TError | Array<ValidationError>;
+    error: TError | Array<ValidationError>;
 }
 
 /**
@@ -18,14 +18,14 @@ export const useQuery = <TData = any, TError = [ValidationError]>(
     query: IQuery,
     validatorOptions?: ValidatorOptions
 ): [IQueryResults<TData, TError>, (query: IQuery) => void] => {
-    const [state, setState] = React.useState<{
+    const [result, setResult] = React.useState<{
         loading: boolean;
         data: TData;
-        errors: TError | Array<ValidationError>;
+        error: TError | Array<ValidationError>;
     }>({
         loading: true,
         data: null,
-        errors: []
+        error: null
     });
 
     const queryBus = IoC.get(QueryBus);
@@ -35,17 +35,29 @@ export const useQuery = <TData = any, TError = [ValidationError]>(
         const errors = await validate(query, validatorOptions);
 
         if (errors.length > 0) {
-            setState({
+            setResult({
                 loading: false,
                 data: null,
-                errors: errors
+                error: errors
             });
             return;
         }
 
-        // process the query
-        const results = await queryBus.process(query);
-        setState(results);
+        try {
+            // process the query
+            const results = await queryBus.process(query);
+            setResult({
+                loading: false,
+                data: results,
+                error: null
+            });
+        } catch (error: any) {
+            setResult({
+                loading: false,
+                data: null,
+                error
+            });
+        }
     };
 
     // for the intial render, wait for the query to be processed
@@ -53,7 +65,7 @@ export const useQuery = <TData = any, TError = [ValidationError]>(
         process(query);
     }, []);
 
-    return [state, process];
+    return [result, process];
 };
 
 export default useQuery;

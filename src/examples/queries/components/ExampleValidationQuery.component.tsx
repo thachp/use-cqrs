@@ -5,11 +5,9 @@ import { ExampleValidationQuery } from "../examplevalidation.query";
 
 export const ExampleValidationComponent = () => {
     // Query hook
-    const [{ loading, errors, data }, process] = useQuery<[ExampleValidationQuery], any>(
-        new ExampleValidationQuery(-1000, 1000)
-    );
+    const [{ loading, error }] = useQuery<[ExampleValidationQuery], any>(new ExampleValidationQuery(-1000, 1000));
 
-    if (errors && errors.length > 0) {
+    if (error && error.length > 0) {
         return <div>Errors...</div>;
     }
 

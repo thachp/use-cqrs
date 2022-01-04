@@ -48,7 +48,6 @@ export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValid
 
         // return the data
         return {
-            loading: false,
             data,
             errors: []
         };

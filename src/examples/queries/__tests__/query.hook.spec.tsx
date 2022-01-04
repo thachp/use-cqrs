@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
 
 import { ExampleQueryComponent } from "../components/ExampleQuery.component";
@@ -20,13 +20,10 @@ describe("Test Query Hook with various component types", () => {
         await act(async () => render(<ExampleQueryComponent />));
 
         // act
-        // load 2 items
         fireEvent.click(screen.getByText(/More/));
-        await act(async () => {
-            screen.getByText(/John/);
-        });
 
         // assert
+        await waitFor(() => screen.getByText(/John/));
         expect(screen.getByText(/John/)).toBeTruthy();
         expect(screen.getByText(/Sally/)).toBeTruthy();
     });

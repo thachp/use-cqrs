@@ -1,21 +1,16 @@
-import { Contains, MaxLength, MinLength } from "class-validator";
 import { Service as Injectable } from "typedi";
 
 import { ICommand, ICommandHandler } from "../../cqrs";
 
 @Injectable()
 class ExampleInjectedService {
-    printMessage() {
-        console.log("I am alive!");
+    doSomething() {
+        throw new Error("Method not implemented.");
     }
 }
 
 export class ExampleWithInjectionCommand implements ICommand {
-    @Contains("hello")
     public readonly hello: string;
-
-    @MinLength(2)
-    @MaxLength(5)
     public readonly name: string;
 
     constructor(hello: string, name: string) {
@@ -32,10 +27,14 @@ export class ExampleWithInjectionCommandHandler implements ICommandHandler<Examp
         const { hello, name } = command;
 
         // call injected service
-        this.exampleInjectedService.printMessage();
-
-        // log
-        console.log("example-command-withinjection", hello, name);
+        try {
+            this.exampleInjectedService.doSomething();
+        } catch (error) {
+            return {
+                loading: false,
+                errors: [error]
+            };
+        }
 
         return {
             loading: false

@@ -1,4 +1,4 @@
-import { Service } from "typedi";
+import { Service as Injectable } from "typedi";
 
 import { IQuery, IQueryHandler } from "../../cqrs";
 
@@ -17,7 +17,7 @@ export class ExampleQuery implements IQuery {
     }
 }
 
-@Service(ExampleQuery.name)
+@Injectable(ExampleQuery.name)
 export class ExampleQueryHandler implements IQueryHandler<ExampleQuery> {
     async process(query: ExampleQuery) {
         const { skip, take } = query;

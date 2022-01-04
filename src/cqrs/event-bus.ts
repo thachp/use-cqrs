@@ -38,10 +38,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
         this._publisher = _publisher;
     }
 
-    /**
-     * @TODO -- code smell, need to destroy all subscriptions
-     */
-    onModuleDestroy() {
+    destroyAllSubscriptions() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 

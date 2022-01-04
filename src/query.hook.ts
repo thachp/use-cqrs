@@ -2,14 +2,19 @@ import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
 
-import { IQueryResults } from "./common/Results";
 import { IQuery, QueryBus } from "./cqrs";
+
+export interface IQueryResults<TData, TError> {
+    loading: boolean;
+    data: TData;
+    errors: TError | Array<ValidationError>;
+}
 
 /**
  * The Query object is used to send a query to the query bus.
  * @param query
  */
-export const useQuery = <TData, TError>(
+export const useQuery = <TData = any, TError = [ValidationError]>(
     query: IQuery,
     validatorOptions?: ValidatorOptions
 ): [IQueryResults<TData, TError>, (query: IQuery) => void] => {

@@ -224,7 +224,7 @@ useCQRS is dependent on the following modules:
 - Khorikov, V. (2018, October 18). CQRS in Practice. Pluralsight.com. Retrieved January 3, 2022, from https://www.pluralsight.com/courses/cqrs-in-practice?aid=7010a000001xAKZAA2
 
 ### Credits
-Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the frontend as ReactJS hooks.
+Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the client-side as ReactJS hooks.
 Thanks [@kamilmysliwiec](https://github.com/kamilmysliwiec)
 
 ### License

@@ -1,15 +1,13 @@
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { Injectable, IoC } from "..";
+import { Injectable } from "..";
 import { CommandBus } from "./command-bus";
-import { EVENTS_HANDLER_METADATA, SAGA_METADATA } from "./decorators/constants";
-import { InvalidSagaException } from "./exceptions";
 import { defaultGetEventName } from "./helpers/default-get-event-name";
 import { DefaultPubSub } from "./helpers/default-pubsub";
-import { IEvent, IEventBus, IEventHandler, IEventPublisher, ISaga } from "./interfaces";
+import { IEvent, IEventBus, IEventHandler, IEventPublisher } from "./interfaces";
 import { Type } from "./interfaces/type.interface";
-import { isFunction, ObservableBus } from "./utils";
+import { ObservableBus } from "./utils";
 
 export type EventHandlerType<EventBase extends IEvent = IEvent> = Type<IEventHandler<EventBase>>;
 
@@ -38,7 +36,11 @@ export class EventBus<EventBase extends IEvent = IEvent>
         this._publisher = _publisher;
     }
 
-    destroyAllSubscriptions() {
+    unsubscribe(name$: string) {
+        //this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    }
+
+    unSubscribeAll() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
@@ -59,54 +61,8 @@ export class EventBus<EventBase extends IEvent = IEvent>
         this.subscriptions.push(subscription);
     }
 
-    registerSagas(types: Type<unknown>[] = []) {
-        const sagas = types
-            .map((target) => {
-                const metadata = Reflect.getMetadata(SAGA_METADATA, target) || [];
-                const instance = IoC.get(target);
-                if (!instance) {
-                    throw new InvalidSagaException();
-                }
-                return metadata.map((key: string) => instance[key].bind(instance));
-            })
-            .reduce((a, b) => a.concat(b), []);
-
-        sagas.forEach((saga) => this.registerSaga(saga));
-    }
-
-    register(handlers: EventHandlerType<EventBase>[] = []) {
-        handlers.forEach((handler) => this.registerHandler(handler));
-    }
-
-    protected registerHandler(handler: EventHandlerType<EventBase>) {
-        const instance = IoC.get(handler);
-        if (!instance) {
-            return;
-        }
-        const eventsNames = this.reflectEventsNames(handler);
-        eventsNames.map((event) => this.bind(instance as IEventHandler<EventBase>, event.name));
-    }
-
-    protected ofEventName(name: string) {
+    public ofEventName(name: string) {
         return this.subject$.pipe(filter((event) => this.getEventName(event) === name));
-    }
-
-    protected registerSaga(saga: ISaga<EventBase>) {
-        if (!isFunction(saga)) {
-            throw new InvalidSagaException();
-        }
-        const stream$ = saga(this);
-        if (!(stream$ instanceof Observable)) {
-            throw new InvalidSagaException();
-        }
-
-        const subscription = stream$.pipe(filter((e) => !!e)).subscribe((command) => this.commandBus.execute(command));
-
-        this.subscriptions.push(subscription);
-    }
-
-    private reflectEventsNames(handler: EventHandlerType<EventBase>): FunctionConstructor[] {
-        return Reflect.getMetadata(EVENTS_HANDLER_METADATA, handler);
     }
 
     private useDefaultPublisher() {

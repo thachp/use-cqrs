@@ -52,30 +52,26 @@ Ask something with useQuery()
 // setup, invoke, and destructure
 const [{data, error, loading}, process] = useQuery<DataType, ErrorType>(new WhateverQuery(value));  
 
-// optionally, invoke process to lazy load
-process(new WhateverQuery(newValue))
+// optionally, invoke process to lazy load with different parameters
+process(newValue)
 ```
 
 Do something with useCommand()
 ```typescript
 // setup and destructure
-const [{error, loading}, execute] = useCommand<ErrorType>(new WhateverCommand(value));        
-or 
-const [{error, loading}, execute] = useCommand<ErrorType>();      
+const [{error, loading}, execute] = useCommand<ErrorType>(nameOf<WhateverCommand>());        
 
 // invoke execute to do something
-execute()
-or 
-execute(new WhateverCommand(value))
+execute(value)
 ```
 
 React to something with useEvent()
 ```typescript
 // setup and destructure
-const [event, emit] = useEvent<DataType>(new WhateverChanged()); 
+const [event, emit] = useEvent<DataType>(nameOf<WhateverChanged>()); 
 
 // optionally, invoke emit to publish an event
-emit(new SomethingChanged())
+emit(new SomethingChanged(value))
 ```
 
 ### How it works?

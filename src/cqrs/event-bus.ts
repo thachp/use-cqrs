@@ -17,13 +17,13 @@ export class EventBus<EventBase extends IEvent = IEvent>
     implements IEventBus<EventBase>
 {
     protected getEventName: (event: EventBase) => string;
-    protected readonly subscriptions: Subscription[];
+    protected readonly subscriptions: Map<string, Subscription>;
 
     private _publisher: IEventPublisher<EventBase>;
 
     constructor(private readonly commandBus: CommandBus) {
         super();
-        this.subscriptions = [];
+        this.subscriptions = new Map<string, Subscription>();
         this.getEventName = defaultGetEventName;
         this.useDefaultPublisher();
     }
@@ -37,7 +37,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
     }
 
     unsubscribe(name$: string) {
-        //this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+        console.log("unsubscribe", name$);
     }
 
     unSubscribeAll() {
@@ -58,7 +58,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
     bind(handler: IEventHandler<EventBase>, name: string) {
         const stream$ = name ? this.ofEventName(name) : this.subject$;
         const subscription = stream$.subscribe((event) => handler.handle(event));
-        this.subscriptions.push(subscription);
+        this.subscriptions.set(name, subscription);
     }
 
     public ofEventName(name: string) {

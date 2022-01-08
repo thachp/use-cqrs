@@ -6,6 +6,8 @@ import { ExampleValidationInjectionComponent } from "../components/ExampleValida
 import { ExampleValidationComponent } from "../components/ExampleValidationQuery.component";
 
 describe("Test Query Hook with various component types", () => {
+    //test("should render the component", async () => {
+
     test("should return one item on initial render", async () => {
         // arrange && act
         await act(async () => render(<ExampleQueryComponent />));

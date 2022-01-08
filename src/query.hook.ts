@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
@@ -31,34 +33,33 @@ export const useQuery = <TData = any, TError = [ValidationError]>(
     const queryBus = IoC.get(QueryBus);
 
     // for lazy loading
-    const process = async (query: IQuery) => {
+    const process = React.useCallback(async (query: IQuery) => {
         const errors = await validate(query, validatorOptions);
 
         if (errors.length > 0) {
-            setResult({
+            return setResult({
                 loading: false,
                 data: null,
                 error: errors
             });
-            return;
         }
 
         try {
             // process the query
             const results = await queryBus.process(query);
-            setResult({
+            return setResult({
                 loading: false,
                 data: results,
                 error: null
             });
         } catch (error: any) {
-            setResult({
+            return setResult({
                 loading: false,
                 data: null,
                 error
             });
         }
-    };
+    }, []);
 
     // for the intial render, wait for the query to be processed
     React.useEffect(() => {

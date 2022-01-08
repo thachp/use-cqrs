@@ -1,3 +1,1 @@
-export interface IEvent {
-    type?: string;
-}
+export interface IEvent {}

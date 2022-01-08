@@ -1,11 +1,14 @@
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
+import { Container, Service as Injectable } from "typedi";
+import { isFunction } from "util";
 
-import { Injectable } from "..";
 import { CommandBus } from "./command-bus";
+import { EVENTS_HANDLER_METADATA, SAGA_METADATA } from "./decorators/constants";
+import { InvalidSagaException } from "./exceptions";
 import { defaultGetEventName } from "./helpers/default-get-event-name";
 import { DefaultPubSub } from "./helpers/default-pubsub";
-import { IEvent, IEventBus, IEventHandler, IEventPublisher } from "./interfaces";
+import { IEvent, IEventBus, IEventHandler, IEventPublisher, ISaga } from "./interfaces";
 import { Type } from "./interfaces/type.interface";
 import { ObservableBus } from "./utils";
 
@@ -17,13 +20,14 @@ export class EventBus<EventBase extends IEvent = IEvent>
     implements IEventBus<EventBase>
 {
     protected getEventName: (event: EventBase) => string;
-    protected readonly subscriptions: Map<string, Subscription>;
+    protected readonly subscriptions: Subscription[];
+    protected moduleRef = Container;
 
     private _publisher: IEventPublisher<EventBase>;
 
     constructor(private readonly commandBus: CommandBus) {
         super();
-        this.subscriptions = new Map<string, Subscription>();
+        this.subscriptions = [];
         this.getEventName = defaultGetEventName;
         this.useDefaultPublisher();
     }
@@ -36,11 +40,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
         this._publisher = _publisher;
     }
 
-    unsubscribe(name$: string) {
-        console.log("unsubscribe", name$);
-    }
-
-    unSubscribeAll() {
+    onModuleDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
@@ -58,11 +58,57 @@ export class EventBus<EventBase extends IEvent = IEvent>
     bind(handler: IEventHandler<EventBase>, name: string) {
         const stream$ = name ? this.ofEventName(name) : this.subject$;
         const subscription = stream$.subscribe((event) => handler.handle(event));
-        this.subscriptions.set(name, subscription);
+        this.subscriptions.push(subscription);
     }
 
-    public ofEventName(name: string) {
+    registerSagas(types: Type<unknown>[] = []) {
+        const sagas = types
+            .map((target) => {
+                const metadata = Reflect.getMetadata(SAGA_METADATA, target) || [];
+                const instance = this.moduleRef.get(target);
+                if (!instance) {
+                    throw new InvalidSagaException();
+                }
+                return metadata.map((key: string) => instance[key].bind(instance));
+            })
+            .reduce((a, b) => a.concat(b), []);
+
+        sagas.forEach((saga) => this.registerSaga(saga));
+    }
+
+    register(handlers: EventHandlerType<EventBase>[] = []) {
+        handlers.forEach((handler) => this.registerHandler(handler));
+    }
+
+    protected registerHandler(handler: EventHandlerType<EventBase>) {
+        const instance = this.moduleRef.get(handler);
+        if (!instance) {
+            return;
+        }
+        const eventsNames = this.reflectEventsNames(handler);
+        eventsNames.map((event) => this.bind(instance as IEventHandler<EventBase>, event.name));
+    }
+
+    protected ofEventName(name: string) {
         return this.subject$.pipe(filter((event) => this.getEventName(event) === name));
+    }
+
+    protected registerSaga(saga: ISaga<EventBase>) {
+        if (!isFunction(saga)) {
+            throw new InvalidSagaException();
+        }
+        const stream$ = saga(this);
+        if (!(stream$ instanceof Observable)) {
+            throw new InvalidSagaException();
+        }
+
+        const subscription = stream$.pipe(filter((e) => !!e)).subscribe((command) => this.commandBus.execute(command));
+
+        this.subscriptions.push(subscription);
+    }
+
+    private reflectEventsNames(handler: EventHandlerType<EventBase>): FunctionConstructor[] {
+        return Reflect.getMetadata(EVENTS_HANDLER_METADATA, handler);
     }
 
     private useDefaultPublisher() {

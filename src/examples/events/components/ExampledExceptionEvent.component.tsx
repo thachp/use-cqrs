@@ -6,7 +6,11 @@ import { ExampledExceptionEvent } from "../exampledexception.event";
 
 export const ExampledExceptionEventComponent = () => {
     // setup an emit hook
-    const [event, emit] = useEvent<ExampledExceptionEvent>(nameOf(ExampledExceptionEvent));
+    const [{ data, error }, emit] = useEvent<ExampledExceptionEvent>(nameOf(ExampledExceptionEvent));
+
+    if (error) {
+        return <div data-testid="error">Errors...</div>;
+    }
 
     return (
         <div>
@@ -14,7 +18,7 @@ export const ExampledExceptionEventComponent = () => {
             <button data-testid="emit" onClick={() => emit(new ExampledExceptionEvent("Hello World!"))}>
                 Emit
             </button>
-            <p data-testid="event">{event?.hello || "No event yet"}</p>
+            <p data-testid="event">{data?.hello || "No event yet"}</p>
         </div>
     );
 };

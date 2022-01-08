@@ -1,19 +1,12 @@
-import { Service as Injectable } from "typedi";
-
-import { IEvent, IEventHandler } from "../../cqrs";
-import { nameOf } from "../../cqrs/operators/of-name";
+import { EventsHandler, IEvent, IEventHandler } from "../../cqrs";
 
 export interface IExampledExceptionEvent extends IEvent {}
 
 export class ExampledExceptionEvent implements IExampledExceptionEvent {
-    public readonly hello: string;
-
-    constructor(hello: string) {
-        this.hello = hello;
-    }
+    constructor(public readonly hello: string) {}
 }
 
-@Injectable(nameOf(ExampledExceptionEvent))
+@EventsHandler(ExampledExceptionEvent)
 export class ExampledExceptionEventHandler implements IEventHandler<ExampledExceptionEvent> {
     async handle(event: ExampledExceptionEvent) {
         throw new Error("Method not implemented.");

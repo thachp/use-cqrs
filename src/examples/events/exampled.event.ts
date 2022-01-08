@@ -1,19 +1,12 @@
-import { Service as Injectable } from "typedi";
-
-import { IEvent, IEventHandler } from "../../cqrs";
-import { nameOf } from "../../cqrs/operators/of-name";
+import { EventsHandler, IEvent, IEventHandler } from "../../cqrs";
 
 export interface IExampledEvent extends IEvent {}
 
 export class ExampledEvent implements IExampledEvent {
-    public readonly hello: string;
-
-    constructor(hello: string) {
-        this.hello = hello;
-    }
+    constructor(public readonly hello: string) {}
 }
 
-@Injectable(nameOf(ExampledEvent))
+@EventsHandler(ExampledEvent)
 export class ExampledEventHandler implements IEventHandler<ExampledEvent> {
     async handle(event: ExampledEvent) {
         // logic here

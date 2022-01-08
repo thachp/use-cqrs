@@ -1,7 +1,4 @@
-import { Service as Injectable } from "typedi";
-
-import { IQuery, IQueryHandler } from "../../cqrs";
-import { nameOf } from "../../cqrs/operators/of-name";
+import { IQuery, IQueryHandler, QueryHandler } from "../../cqrs";
 
 export interface ExampleQueryDataItem {
     id: string;
@@ -9,16 +6,10 @@ export interface ExampleQueryDataItem {
 }
 
 export class ExampleQuery implements IQuery {
-    public readonly skip: number;
-    public readonly take: number;
-
-    constructor(skip: number = 0, take: number = 1) {
-        this.skip = skip;
-        this.take = take;
-    }
+    constructor(public readonly skip: number = 0, public readonly take: number = 1) {}
 }
 
-@Injectable(nameOf(ExampleQuery))
+@QueryHandler(ExampleQuery)
 export class ExampleQueryHandler implements IQueryHandler<ExampleQuery> {
     async process(query: ExampleQuery) {
         const { skip, take } = query;

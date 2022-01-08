@@ -1,13 +1,15 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
 
+import useCqrs from "../../../cqrs.provider";
 import { ExampleQueryComponent } from "../components/ExampleQuery.component";
 import { ExampleValidationInjectionComponent } from "../components/ExampleValidationInjectionQuery.component";
 import { ExampleValidationComponent } from "../components/ExampleValidationQuery.component";
 
 describe("Test Query Hook with various component types", () => {
-    //test("should render the component", async () => {
-
+    beforeEach(() => {
+        useCqrs.initialize();
+    });
     test("should return one item on initial render", async () => {
         // arrange && act
         await act(async () => render(<ExampleQueryComponent />));

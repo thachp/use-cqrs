@@ -1,6 +1,6 @@
 import { Service as Injectable } from "typedi";
 
-import { ICommand, ICommandHandler } from "../../cqrs";
+import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
 
 @Injectable()
 class ExampleInjectedService {
@@ -10,16 +10,10 @@ class ExampleInjectedService {
 }
 
 export class ExampleWithInjectionCommand implements ICommand {
-    public readonly hello: string;
-    public readonly name: string;
-
-    constructor(hello: string, name: string) {
-        this.hello = hello;
-        this.name = name;
-    }
+    constructor(public readonly hello: string, public readonly name: string) {}
 }
 
-@Injectable(ExampleWithInjectionCommand.name)
+@CommandHandler(ExampleWithInjectionCommand)
 export class ExampleWithInjectionCommandHandler implements ICommandHandler<ExampleWithInjectionCommand> {
     constructor(public readonly exampleInjectedService: ExampleInjectedService) {}
 

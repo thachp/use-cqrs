@@ -1,7 +1,6 @@
 import { Contains, MaxLength, MinLength } from "class-validator";
-import { Service as Injectable } from "typedi";
 
-import { ICommand, ICommandHandler } from "../../cqrs";
+import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
 
 export class ExampleWithValidationCommand implements ICommand {
     @Contains("hello")
@@ -17,7 +16,7 @@ export class ExampleWithValidationCommand implements ICommand {
     }
 }
 
-@Injectable(ExampleWithValidationCommand.name)
+@CommandHandler(ExampleWithValidationCommand)
 export class ExampleWithValidationCommandHandler implements ICommandHandler<ExampleWithValidationCommand> {
     constructor() {}
 

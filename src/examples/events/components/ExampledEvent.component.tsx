@@ -6,7 +6,7 @@ import { ExampledEvent } from "../exampled.event";
 
 export const ExampledEventComponent = () => {
     // setup an emit hook
-    const [event, emit] = useEvent<ExampledEvent>(nameOf(ExampledEvent));
+    const [{ data, error }, emit] = useEvent<ExampledEvent>(nameOf(ExampledEvent));
 
     return (
         <div>
@@ -14,7 +14,7 @@ export const ExampledEventComponent = () => {
             <button data-testid="emit" onClick={() => emit(new ExampledEvent("Hello World!"))}>
                 Emit
             </button>
-            <p data-testid="event">{event?.hello || "No event yet"}</p>
+            <p data-testid="event">{data?.hello || "No event yet"}</p>
         </div>
     );
 };

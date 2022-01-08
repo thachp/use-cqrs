@@ -1,8 +1,7 @@
 import { IsNumber, Max, Min } from "class-validator";
 import { Service as Injectable } from "typedi";
 
-import { IQuery, IQueryHandler } from "../../cqrs";
-import { nameOf } from "../../cqrs/operators/of-name";
+import { IQuery, IQueryHandler, QueryHandler } from "../../cqrs";
 
 export interface ExampleQueryDataItem {
     id: string;
@@ -36,7 +35,7 @@ export class ExampleValidationInjectionQuery implements IQuery {
     }
 }
 
-@Injectable(nameOf(ExampleValidationInjectionQuery))
+@QueryHandler(ExampleValidationInjectionQuery)
 export class ExampleWithValidationQueryHandler implements IQueryHandler<ExampleValidationInjectionQuery> {
     constructor(public readonly exampleService: ExampleService) {}
 

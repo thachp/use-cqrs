@@ -16,6 +16,6 @@ export class ExampledEvent implements IExampledEvent {
 @Injectable(nameOf(ExampledEvent))
 export class ExampledEventHandler implements IEventHandler<ExampledEvent> {
     async handle(event: ExampledEvent) {
-        throw new Error("Method not implemented.");
+        // logic here
     }
 }

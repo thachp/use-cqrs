@@ -16,4 +16,17 @@ describe("Test Event Hook with various component types", () => {
         // assert
         expect(screen.getByTestId(/event/).textContent).toBe("Hello World!");
     });
+
+    test("event handler throw exception", async () => {
+        // arrange && act
+        await act(async () => render(<ExampledEventComponent />));
+
+        // act
+        fireEvent.click(screen.getByText(/Emit/));
+
+        await waitFor(() => screen.getByText(/Hello/));
+
+        // assert
+        expect(screen.getByTestId(/event/).textContent).toBe("Hello World!");
+    });
 });

@@ -49,7 +49,7 @@ Add these settings to your tsconfig.json
 ```typescript
 import { useCqrs } from "use-cqrs";
 
-//Register your handlers on start
+// register handlers on start
 useCqrs.initialize({
     queries: [ExampleValidationQueryHandler],
     commands: [],
@@ -141,7 +141,7 @@ export class ExampleValidationQuery implements IQuery {
 @Injectable()
 @QueryHandler(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
-    // exampleModel is injectable
+    // ExampleModel is injectable
     constructor(public readonly exampleModel: ExampleModel) {}
 
     // business logic here

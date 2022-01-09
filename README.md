@@ -44,7 +44,7 @@ Add these settings to your tsconfig.json
 }
 ```
 
-### Getting started
+## Getting started
 
 ```typescript
 import { useCqrs } from "@thachp/useCqrs";
@@ -88,13 +88,14 @@ const [event, emit] = useEvent<DataType>(nameOf<WhateverChanged>());
 emit(new SomethingChanged(value));
 ```
 
-### How it works?
+## How it works?
 
 ![arch](https://user-images.githubusercontent.com/1495371/147893504-42a50f72-293a-4dc0-bf29-3c5a568f36f6.png)
 
-### Examples
+## Examples
 
-Each query, command, and event must have its corresponding handler. Below are example of classes for query and its handler. Validation decorators can be used to perform field validation. Services classes could also be injected into the handler.
+Each query, command, and event must have its corresponding handler. Below are example of classes for query and its handler. 
+Validation decorators can be used to perform field validation. Services classes could also be injected into the handler.
 
 ```typescript
 import { IQuery, IQueryHandler, Injectable } from "@thachp/use-cqrs";
@@ -134,7 +135,8 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
-// Register the handler with Injectable and QueryHandler decorators, so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
+// Register the handler with Injectable and QueryHandler decorators, 
+// so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
 @Injectable()
 @QueryHandler(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
@@ -213,14 +215,14 @@ export const ExampleQueryComponent = () => {
 };
 ```
 
-### Contributing
+## Contributing
 
 -   Do Fork and Pull to the develop branch
 -   Do apply TDD approach to development
 -   Do use camelCase
 -   Do not override Prettier configuration
 
-### Dependencies
+## Dependencies
 
 useCQRS is dependent on the following modules:
 
@@ -229,7 +231,7 @@ useCQRS is dependent on the following modules:
 -   [Class-validator](https://github.com/typestack/class-validator) Decorator-based property validation for classes
 -   [RxJS](https://github.com/ReactiveX/rxjs) A reactive programming library for JavaScript
 
-### References
+## References
 
 -   Dominguez, J., Melnik, G., Simonazzi, F., Subramanian, M., & Betts, D. (2012). Exploring CQRS and Event Sourcing (Microsoft patterns & practices) (1st ed.). Microsoft.
 -   Fowler, M. (2011, July 14). bliki: CQRS. Martinfowler.Com. Retrieved January 3, 2022, from https://martinfowler.com/bliki/CQRS.html
@@ -240,11 +242,11 @@ useCQRS is dependent on the following modules:
 
 -   Van Veen, B. (2019, March 1). Different kinds of service bus: command bus, service bus and query bus. Barry van Veen. Retrieved January 9, 2022, from https://barryvanveen.nl/articles/59-different-kinds-of-service-bus-command-bus-service-bus-and-query-bus
 
-### Credits
+## Credits
 
 Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the client-side as ReactJS hooks.
 Thanks [@kamilmysliwiec](https://github.com/kamilmysliwiec)
 
-### License
+## License
 
 useCQRS is [MIT](https://github.com/thachp/use-cqrs/blob/main/LICENSE) licensed.

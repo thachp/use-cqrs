@@ -24,13 +24,13 @@ This package will be considered a success if the following goals are achieved:
 Using npm
 
 ```bash
-npm install @thachp/use-cqrs
+npm install use-cqrs
 ```
 
 Using yarn
 
 ```bash
-yarn add @thachp/use-cqrs
+yarn add use-cqrs
 ```
 
 Add these settings to your tsconfig.json

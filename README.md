@@ -94,8 +94,8 @@ emit(new SomethingChanged(value));
 
 ## Examples
 
-Each query, command, and event must have its corresponding handler. Below are example of classes for query and its handler. 
-Validation decorators can be used to perform field validation. Services classes could also be injected into the handler.
+Each query, command, and event must have its corresponding handler. Below are an example of classes for a query and its handler. 
+You may use validation decorators to perform field validation and inject classes into the handler.
 
 ```typescript
 import { IQuery, IQueryHandler, Injectable } from "use-cqrs";

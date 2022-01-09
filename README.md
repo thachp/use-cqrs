@@ -111,9 +111,10 @@ export interface ExampleQueryDataItem {
 
 @Injectable()
 class ExampleModel extends AggregateRoot {
-    constructor(public readonly httpClient: AnyGraphQLClient);
+    constructor(public readonly client: AnyGraphQLClient);
 
-    doSomething() {
+    querySomething() {
+        // client.query(...)
         console.log("I am alive!");
     }
 }

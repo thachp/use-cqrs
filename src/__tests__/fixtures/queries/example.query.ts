@@ -1,6 +1,6 @@
 import { Service as Injectable } from "typedi";
 
-import { IQuery, IQueryHandler, QueryHandler } from "../../cqrs";
+import { IQuery, IQueryHandler, QueryHandler } from "../../../cqrs";
 
 export interface ExampleQueryDataItem {
     id: string;

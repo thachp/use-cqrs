@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useCommand } from "../../../command.hook";
+import { useCommand } from "../../../../command.hook";
 import { ExampleWithInjectionCommand } from "../examplewithinjection.command";
 
 export const ExampleWithInjectionComponent = () => {

@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { nameOf } from "../../../cqrs/operators/of-name";
-import { useEvent } from "../../../event.hook";
+import { nameOf } from "../../../../cqrs/operators/of-name";
+import { useEvent } from "../../../../event.hook";
 import { ExampledExceptionEvent } from "../exampledexception.event";
 
 export const ExampledExceptionEventComponent = () => {

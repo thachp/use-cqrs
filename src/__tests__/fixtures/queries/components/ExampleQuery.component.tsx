@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useQuery } from "../../../query.hook";
+import { useQuery } from "../../../../query.hook";
 import { ExampleQuery, ExampleQueryDataItem } from "../example.query";
 
 export const ExampleQueryComponent = () => {

@@ -1,7 +1,7 @@
 import { Contains, MaxLength, MinLength } from "class-validator";
 
-import { Injectable } from "../..";
-import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
+import { Injectable } from "../../..";
+import { CommandHandler, ICommand, ICommandHandler } from "../../../cqrs";
 
 export class ExampleWithValidationCommand implements ICommand {
     @Contains("hello")

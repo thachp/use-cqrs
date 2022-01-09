@@ -1,13 +1,15 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
 
-import useCqrs from "../../../cqrs.provider";
-import { ExampleQueryComponent } from "../components/ExampleQuery.component";
-import { ExampleValidationInjectionComponent } from "../components/ExampleValidationInjectionQuery.component";
-import { ExampleValidationComponent } from "../components/ExampleValidationQuery.component";
-import { ExampleQueryHandler } from "../example.query";
-import { ExampleValidationQueryHandler } from "../examplevalidation.query";
-import { ExampleWithValidationQueryHandler } from "../examplewithvalidationinjection.query";
+import useCqrs from "../cqrs.provider";
+import { ExampleQueryComponent } from "./fixtures/queries/components/ExampleQuery.component";
+import {
+    ExampleValidationInjectionComponent,
+} from "./fixtures/queries/components/ExampleValidationInjectionQuery.component";
+import { ExampleValidationComponent } from "./fixtures/queries/components/ExampleValidationQuery.component";
+import { ExampleQueryHandler } from "./fixtures/queries/example.query";
+import { ExampleValidationQueryHandler } from "./fixtures/queries/examplevalidation.query";
+import { ExampleWithValidationQueryHandler } from "./fixtures/queries/examplewithvalidationinjection.query";
 
 describe("Test Query Hook with various component types", () => {
     beforeEach(() => {

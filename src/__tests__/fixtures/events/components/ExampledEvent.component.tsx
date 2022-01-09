@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { nameOf } from "../../../cqrs/operators/of-name";
-import { useEvent } from "../../../event.hook";
+import { nameOf } from "../../../../cqrs/operators/of-name";
+import { useEvent } from "../../../../event.hook";
 import { ExampledEvent } from "../exampled.event";
 
 export const ExampledEventComponent = () => {

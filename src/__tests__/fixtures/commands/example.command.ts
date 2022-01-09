@@ -1,6 +1,6 @@
 import { Service as Injectable } from "typedi";
 
-import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
+import { CommandHandler, ICommand, ICommandHandler } from "../../../cqrs";
 
 export class ExampleCommand implements ICommand {
     constructor(public readonly hello: string, public readonly name: string) {}

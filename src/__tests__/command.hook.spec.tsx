@@ -1,13 +1,13 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
 
-import useCqrs from "../../../cqrs.provider";
-import { ExampleCommandComponent } from "../components/ExampleCommand.component";
-import { ExampleWithInjectionComponent } from "../components/ExampleInjectionCommand.component";
-import { ExampleValidationCommandComponent } from "../components/ExampleValidationCommand.component";
-import { ExampleCommandHandler } from "../example.command";
-import { ExampleWithInjectionCommandHandler } from "../examplewithinjection.command";
-import { ExampleWithValidationCommandHandler } from "../examplewithvalidation.command";
+import useCqrs from "../cqrs.provider";
+import { ExampleCommandComponent } from "./fixtures/commands/components/ExampleCommand.component";
+import { ExampleWithInjectionComponent } from "./fixtures/commands/components/ExampleInjectionCommand.component";
+import { ExampleValidationCommandComponent } from "./fixtures/commands/components/ExampleValidationCommand.component";
+import { ExampleCommandHandler } from "./fixtures/commands/example.command";
+import { ExampleWithInjectionCommandHandler } from "./fixtures/commands/examplewithinjection.command";
+import { ExampleWithValidationCommandHandler } from "./fixtures/commands/examplewithvalidation.command";
 
 describe("Test Command Hook", () => {
     beforeEach(() => {

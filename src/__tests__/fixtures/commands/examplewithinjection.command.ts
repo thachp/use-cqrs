@@ -1,6 +1,6 @@
 import { Service as Injectable } from "typedi";
 
-import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
+import { CommandHandler, ICommand, ICommandHandler } from "../../../cqrs";
 
 @Injectable()
 class ExampleInjectedService {

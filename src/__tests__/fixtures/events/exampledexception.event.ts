@@ -1,6 +1,6 @@
 import { Service as Injectable } from "typedi";
 
-import { EventsHandler, IEvent, IEventHandler } from "../../cqrs";
+import { EventsHandler, IEvent, IEventHandler } from "../../../cqrs";
 
 export interface IExampledExceptionEvent extends IEvent {}
 

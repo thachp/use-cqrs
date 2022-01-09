@@ -5,7 +5,7 @@ import { ExampleWithInjectionCommand } from "../examplewithinjection.command";
 
 export const ExampleWithInjectionComponent = () => {
     // Command hook
-    const [{ loading, error }, command] = useCommand<any>(new ExampleWithInjectionCommand("Hello", "World"));
+    const [{ loading, error }, command] = useCommand<any>();
 
     if (error) {
         return (
@@ -20,7 +20,7 @@ export const ExampleWithInjectionComponent = () => {
     }
 
     return (
-        <button data-testid="more" onClick={() => command()}>
+        <button data-testid="more" onClick={() => command(new ExampleWithInjectionCommand("Hello", "World"))}>
             More
         </button>
     );

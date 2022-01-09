@@ -5,9 +5,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,30 +15,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExampleCommandHandler = exports.ExampleCommand = void 0;
+exports.ExampledExceptionEventHandler = exports.ExampledExceptionEvent = void 0;
 const typedi_1 = require("typedi");
-class ExampleCommand {
-    constructor(...args) {
-        this.hello = args[0];
-        this.name = args[1];
+const cqrs_1 = require("../../cqrs");
+class ExampledExceptionEvent {
+    constructor(hello) {
+        this.hello = hello;
     }
 }
-exports.ExampleCommand = ExampleCommand;
-let ExampleCommandHandler = class ExampleCommandHandler {
-    constructor() { }
-    execute(command) {
+exports.ExampledExceptionEvent = ExampledExceptionEvent;
+let ExampledExceptionEventHandler = class ExampledExceptionEventHandler {
+    handle(event) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { hello, name } = command;
-            console.log("example-command", hello, name);
-            return {
-                loading: false,
-                errors: []
-            };
+            console.log("gothexception", event.hello);
+            throw new Error("Method not implemented.");
         });
     }
 };
-ExampleCommandHandler = __decorate([
-    (0, typedi_1.Service)(ExampleCommand.name),
-    __metadata("design:paramtypes", [])
-], ExampleCommandHandler);
-exports.ExampleCommandHandler = ExampleCommandHandler;
+ExampledExceptionEventHandler = __decorate([
+    (0, typedi_1.Service)(),
+    (0, cqrs_1.EventsHandler)(ExampledExceptionEvent)
+], ExampledExceptionEventHandler);
+exports.ExampledExceptionEventHandler = ExampledExceptionEventHandler;

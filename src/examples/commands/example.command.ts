@@ -1,18 +1,13 @@
 import { Service as Injectable } from "typedi";
 
-import { ICommand, ICommandHandler } from "../../cqrs";
+import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
 
 export class ExampleCommand implements ICommand {
-    public readonly hello: string;
-    public readonly name: string;
-
-    constructor(hello: string, name: string) {
-        this.hello = hello;
-        this.name = name;
-    }
+    constructor(public readonly hello: string, public readonly name: string) {}
 }
 
-@Injectable(ExampleCommand.name)
+@Injectable()
+@CommandHandler(ExampleCommand)
 export class ExampleCommandHandler implements ICommandHandler<ExampleCommand> {
     constructor() {}
 

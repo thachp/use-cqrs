@@ -18,52 +18,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExampleWithInjectionCommandHandler = exports.ExampleWithInjectionCommand = void 0;
+exports.ExampleWithValidationQueryHandler = exports.ExampleValidationInjectionQuery = void 0;
 const class_validator_1 = require("class-validator");
 const typedi_1 = require("typedi");
-let ExampleInjectedService = class ExampleInjectedService {
-    printMessage() {
-        console.log("I am alive!");
+const cqrs_1 = require("../../cqrs");
+let ExampleService = class ExampleService {
+    getRecords() {
+        return [
+            { id: "1", name: "John Doe" },
+            { id: "2", name: "Jane Doe" },
+            { id: "3", name: "Joe Doe" }
+        ];
     }
 };
-ExampleInjectedService = __decorate([
+ExampleService = __decorate([
     (0, typedi_1.Service)()
-], ExampleInjectedService);
-class ExampleWithInjectionCommand {
-    constructor(hello, name) {
-        this.hello = hello;
-        this.name = name;
+], ExampleService);
+class ExampleValidationInjectionQuery {
+    constructor(skip = 0, take = 5) {
+        this.skip = skip;
+        this.take = take;
     }
 }
 __decorate([
-    (0, class_validator_1.Contains)("hello"),
-    __metadata("design:type", String)
-], ExampleWithInjectionCommand.prototype, "hello", void 0);
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], ExampleValidationInjectionQuery.prototype, "skip", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(2),
-    (0, class_validator_1.MaxLength)(5),
-    __metadata("design:type", String)
-], ExampleWithInjectionCommand.prototype, "name", void 0);
-exports.ExampleWithInjectionCommand = ExampleWithInjectionCommand;
-let ExampleWithInjectionCommandHandler = class ExampleWithInjectionCommandHandler {
-    constructor(exampleInjectedService) {
-        this.exampleInjectedService = exampleInjectedService;
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Max)(10),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], ExampleValidationInjectionQuery.prototype, "take", void 0);
+exports.ExampleValidationInjectionQuery = ExampleValidationInjectionQuery;
+let ExampleWithValidationQueryHandler = class ExampleWithValidationQueryHandler {
+    constructor(exampleService) {
+        this.exampleService = exampleService;
     }
-    execute(command) {
+    process(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { hello, name } = command;
+            const { skip, take } = query;
             // call injected service
-            this.exampleInjectedService.printMessage();
-            // log
-            console.log("example-command-withinjection", hello, name);
-            return {
-                loading: false
-            };
+            const records = this.exampleService.getRecords();
+            console.log("example-query-withvalidationinjection", skip, take);
+            // return the data
+            return { skip, take, records };
         });
     }
 };
-ExampleWithInjectionCommandHandler = __decorate([
-    (0, typedi_1.Service)(ExampleWithInjectionCommand.name),
-    __metadata("design:paramtypes", [ExampleInjectedService])
-], ExampleWithInjectionCommandHandler);
-exports.ExampleWithInjectionCommandHandler = ExampleWithInjectionCommandHandler;
+ExampleWithValidationQueryHandler = __decorate([
+    (0, typedi_1.Service)(),
+    (0, cqrs_1.QueryHandler)(ExampleValidationInjectionQuery),
+    __metadata("design:paramtypes", [ExampleService])
+], ExampleWithValidationQueryHandler);
+exports.ExampleWithValidationQueryHandler = ExampleWithValidationQueryHandler;

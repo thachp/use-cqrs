@@ -18,50 +18,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExampleWithValidationCommandHandler = exports.ExampleWithValidationInjectionCommand = void 0;
-const class_validator_1 = require("class-validator");
+exports.ExampleCommandHandler = exports.ExampleCommand = void 0;
 const typedi_1 = require("typedi");
-let ExampleValidationInjectedService = class ExampleValidationInjectedService {
-    printMessage() {
-        console.log("I am alive!");
-    }
-};
-ExampleValidationInjectedService = __decorate([
-    (0, typedi_1.Service)()
-], ExampleValidationInjectedService);
-class ExampleWithValidationInjectionCommand {
+const cqrs_1 = require("../../cqrs");
+class ExampleCommand {
     constructor(hello, name) {
         this.hello = hello;
         this.name = name;
     }
 }
-__decorate([
-    (0, class_validator_1.Contains)("hello"),
-    __metadata("design:type", String)
-], ExampleWithValidationInjectionCommand.prototype, "hello", void 0);
-__decorate([
-    (0, class_validator_1.MinLength)(2),
-    (0, class_validator_1.MaxLength)(5),
-    __metadata("design:type", String)
-], ExampleWithValidationInjectionCommand.prototype, "name", void 0);
-exports.ExampleWithValidationInjectionCommand = ExampleWithValidationInjectionCommand;
-let ExampleWithValidationCommandHandler = class ExampleWithValidationCommandHandler {
-    constructor(exampleInjectedService) {
-        this.exampleInjectedService = exampleInjectedService;
-    }
+exports.ExampleCommand = ExampleCommand;
+let ExampleCommandHandler = class ExampleCommandHandler {
+    constructor() { }
     execute(command) {
         return __awaiter(this, void 0, void 0, function* () {
             const { hello, name } = command;
-            this.exampleInjectedService.printMessage();
-            console.log("example-command-withvalidationinjection", hello, name);
-            return {
-                loading: false
-            };
+            console.log("example-command", hello, name);
         });
     }
 };
-ExampleWithValidationCommandHandler = __decorate([
-    (0, typedi_1.Service)(ExampleWithValidationInjectionCommand.name),
-    __metadata("design:paramtypes", [ExampleValidationInjectedService])
-], ExampleWithValidationCommandHandler);
-exports.ExampleWithValidationCommandHandler = ExampleWithValidationCommandHandler;
+ExampleCommandHandler = __decorate([
+    (0, typedi_1.Service)(),
+    (0, cqrs_1.CommandHandler)(ExampleCommand),
+    __metadata("design:paramtypes", [])
+], ExampleCommandHandler);
+exports.ExampleCommandHandler = ExampleCommandHandler;

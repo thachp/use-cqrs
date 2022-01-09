@@ -13,6 +13,7 @@ exports.EventBus = void 0;
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const typedi_1 = require("typedi");
+const util_1 = require("util");
 const command_bus_1 = require("./command-bus");
 const constants_1 = require("./decorators/constants");
 const exceptions_1 = require("./exceptions");
@@ -23,7 +24,8 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
     constructor(commandBus) {
         super();
         this.commandBus = commandBus;
-        this.subscriptions = [];
+        this.moduleRef = typedi_1.Container;
+        this.subscriptions = new Map();
         this.getEventName = default_get_event_name_1.defaultGetEventName;
         this.useDefaultPublisher();
     }
@@ -33,10 +35,14 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
     set publisher(_publisher) {
         this._publisher = _publisher;
     }
-    /**
-     * @TODO -- code smell, need to destroy all subscriptions
-     */
-    onModuleDestroy() {
+    unsubscribe(name) {
+        const subscription = this.subscriptions.get(name);
+        if (subscription) {
+            subscription.unsubscribe();
+            this.subscriptions.delete(name);
+        }
+    }
+    unsubscribeAll() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
     publish(event) {
@@ -51,13 +57,13 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
     bind(handler, name) {
         const stream$ = name ? this.ofEventName(name) : this.subject$;
         const subscription = stream$.subscribe((event) => handler.handle(event));
-        this.subscriptions.push(subscription);
+        this.subscriptions.set(name, subscription);
     }
     registerSagas(types = []) {
         const sagas = types
             .map((target) => {
             const metadata = Reflect.getMetadata(constants_1.SAGA_METADATA, target) || [];
-            const instance = typedi_1.Container.get(target);
+            const instance = this.moduleRef.get(target);
             if (!instance) {
                 throw new exceptions_1.InvalidSagaException();
             }
@@ -69,19 +75,19 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
     register(handlers = []) {
         handlers.forEach((handler) => this.registerHandler(handler));
     }
+    ofEventName(name) {
+        return this.subject$.pipe((0, operators_1.filter)((event) => this.getEventName(event) === name));
+    }
     registerHandler(handler) {
-        const instance = typedi_1.Container.get(handler);
+        const instance = this.moduleRef.get(handler);
         if (!instance) {
             return;
         }
         const eventsNames = this.reflectEventsNames(handler);
         eventsNames.map((event) => this.bind(instance, event.name));
     }
-    ofEventName(name) {
-        return this.subject$.pipe((0, operators_1.filter)((event) => this.getEventName(event) === name));
-    }
     registerSaga(saga) {
-        if (!(0, utils_1.isFunction)(saga)) {
+        if (!(0, util_1.isFunction)(saga)) {
             throw new exceptions_1.InvalidSagaException();
         }
         const stream$ = saga(this);
@@ -89,7 +95,7 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
             throw new exceptions_1.InvalidSagaException();
         }
         const subscription = stream$.pipe((0, operators_1.filter)((e) => !!e)).subscribe((command) => this.commandBus.execute(command));
-        this.subscriptions.push(subscription);
+        this.subscriptions.set(saga.name, subscription);
     }
     reflectEventsNames(handler) {
         return Reflect.getMetadata(constants_1.EVENTS_HANDLER_METADATA, handler);

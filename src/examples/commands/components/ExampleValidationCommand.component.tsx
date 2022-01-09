@@ -6,9 +6,7 @@ import { ExampleWithValidationCommand } from "../examplewithvalidation.command";
 
 export const ExampleValidationCommandComponent = () => {
     // setup command hook
-    const [{ loading, error }, command] = useCommand<[ValidationError]>(
-        new ExampleWithValidationCommand("Wazzup", "1")
-    );
+    const [{ loading, error }, command] = useCommand<[ValidationError]>();
 
     // if errors, display them
     if (error) {
@@ -22,7 +20,7 @@ export const ExampleValidationCommandComponent = () => {
 
     // the action button that will trigger the command
     return (
-        <button data-testid="more" onClick={() => command()}>
+        <button data-testid="more" onClick={() => command(new ExampleWithValidationCommand("Wazzup", "1"))}>
             DoSomething
         </button>
     );

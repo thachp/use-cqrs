@@ -16,7 +16,6 @@ export interface ICommandResults<TError> {
  */
 
 export const useCommand = <TError = [ValidationError]>(
-    initialCommand: ICommand,
     validatorOptions?: ValidatorOptions
 ): [ICommandResults<TError>, (command?: ICommand) => Promise<void>] => {
     // initialize state with loading to true
@@ -33,9 +32,7 @@ export const useCommand = <TError = [ValidationError]>(
 
     const commandBus = Container.get(CommandBus);
 
-    const execute = React.useCallback(async (command?: ICommand) => {
-        const commandToExecute = command || initialCommand;
-
+    const execute = React.useCallback(async (command: ICommand) => {
         if (!ref.current.result.loading) {
             setResult(
                 (ref.current.result = {
@@ -46,7 +43,7 @@ export const useCommand = <TError = [ValidationError]>(
         }
 
         // validate fields before sending the command to the command bus
-        const errors = await validate(commandToExecute, validatorOptions);
+        const errors = await validate(command, validatorOptions);
 
         // if there are errors, set the state to the errors
         if (errors.length > 0) {
@@ -69,7 +66,7 @@ export const useCommand = <TError = [ValidationError]>(
 
         // send the command to the command bus
         try {
-            await commandBus.execute(commandToExecute);
+            await commandBus.execute(command);
 
             // set the state to the command results
             setResult(

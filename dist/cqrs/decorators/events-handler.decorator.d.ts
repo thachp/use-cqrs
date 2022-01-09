@@ -1,5 +1,5 @@
-import 'reflect-metadata';
-import { IEvent } from '../index';
+import "reflect-metadata";
+import { IEvent } from "../interfaces/events/event.interface";
 /**
  * Decorator that marks a class as a Nest event handler. An event handler
  * handles events executed by your application code.

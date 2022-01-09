@@ -1,6 +1,6 @@
-import { ICommand, ICommandHandler } from "../cqrs";
+import { ICommand, ICommandHandler } from "../../cqrs";
 declare class ExampleInjectedService {
-    printMessage(): void;
+    doSomething(): void;
 }
 export declare class ExampleWithInjectionCommand implements ICommand {
     readonly hello: string;
@@ -10,8 +10,6 @@ export declare class ExampleWithInjectionCommand implements ICommand {
 export declare class ExampleWithInjectionCommandHandler implements ICommandHandler<ExampleWithInjectionCommand> {
     readonly exampleInjectedService: ExampleInjectedService;
     constructor(exampleInjectedService: ExampleInjectedService);
-    execute(command: ExampleWithInjectionCommand): Promise<{
-        loading: boolean;
-    }>;
+    execute(command: ExampleWithInjectionCommand): Promise<void>;
 }
 export {};

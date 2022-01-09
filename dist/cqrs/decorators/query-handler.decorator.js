@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QueryHandler = void 0;
 require("reflect-metadata");
-const constants_1 = require("./constants");
 const uuid_1 = require("uuid");
+const constants_1 = require("./constants");
 /**
  * Decorator that marks a class as a Nest query handler. A query handler
  * handles queries executed by your application code.

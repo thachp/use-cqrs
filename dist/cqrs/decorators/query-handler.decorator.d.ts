@@ -1,5 +1,5 @@
-import 'reflect-metadata';
-import { IQuery } from '../interfaces';
+import "reflect-metadata";
+import { IQuery } from "../interfaces/queries/query.interface";
 /**
  * Decorator that marks a class as a Nest query handler. A query handler
  * handles queries executed by your application code.

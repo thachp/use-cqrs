@@ -5,7 +5,7 @@ import { ExampleCommand } from "../example.command";
 
 export const ExampleCommandComponent = () => {
     // setup command hook
-    const [{ loading, error }, command] = useCommand<any>(new ExampleCommand("Hello", "World"));
+    const [{ loading, error }, command] = useCommand<any>();
 
     // if errors, display them
     if (error) {
@@ -19,7 +19,7 @@ export const ExampleCommandComponent = () => {
 
     // the action button that will trigger the command
     return (
-        <button data-testid="more" onClick={() => command()}>
+        <button data-testid="more" onClick={() => command(new ExampleCommand("Hello", "World"))}>
             DoSomething
         </button>
     );

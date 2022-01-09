@@ -1,6 +1,7 @@
-import 'reflect-metadata';
-import { IEvent } from '../index';
-import { EVENTS_HANDLER_METADATA } from './constants';
+import "reflect-metadata";
+
+import { IEvent } from "../interfaces/events/event.interface";
+import { EVENTS_HANDLER_METADATA } from "./constants";
 
 /**
  * Decorator that marks a class as a Nest event handler. An event handler
@@ -13,7 +14,7 @@ import { EVENTS_HANDLER_METADATA } from './constants';
  * @see https://docs.nestjs.com/recipes/cqrs#events
  */
 export const EventsHandler = (...events: IEvent[]): ClassDecorator => {
-  return (target: object) => {
-    Reflect.defineMetadata(EVENTS_HANDLER_METADATA, events, target);
-  };
+    return (target: object) => {
+        Reflect.defineMetadata(EVENTS_HANDLER_METADATA, events, target);
+    };
 };

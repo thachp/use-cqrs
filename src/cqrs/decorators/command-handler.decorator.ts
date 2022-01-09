@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { v4 } from "uuid";
 
-import { ICommand } from "../interfaces";
+import { ICommand } from "../interfaces/commands/command.interface";
 import { COMMAND_HANDLER_METADATA, COMMAND_METADATA } from "./constants";
 
 /**

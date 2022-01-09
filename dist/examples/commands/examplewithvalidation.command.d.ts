@@ -1,4 +1,4 @@
-import { ICommand, ICommandHandler } from "../cqrs";
+import { ICommand, ICommandHandler } from "../../cqrs";
 export declare class ExampleWithValidationCommand implements ICommand {
     readonly hello: string;
     readonly name: string;
@@ -6,7 +6,5 @@ export declare class ExampleWithValidationCommand implements ICommand {
 }
 export declare class ExampleWithValidationCommandHandler implements ICommandHandler<ExampleWithValidationCommand> {
     constructor();
-    execute(command: ExampleWithValidationCommand): Promise<{
-        loading: boolean;
-    }>;
+    execute(command: ExampleWithValidationCommand): Promise<void>;
 }

@@ -39,33 +39,22 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
             });
         }
 
-        try {
-            eventBus.publish(event);
-        } catch (error: any) {
-            console.log("got error", error);
-            setEvent({
-                error,
-                data: null
-            });
-        }
+        // emit the event
+        eventBus.publish(event);
     }, []);
 
     React.useEffect(() => {
-        // @TODO: event coming from source adapter, should send it to the event bus
-
         // event coming from the event bus should be send to the state
-        // eventBus.ofEventName(name$).subscribe((event) => {
-        //     console.log("got event", event);
-
-        //     setEvent({
-        //         data: event,
-        //         error: null
-        //     });
-        // });
+        eventBus.ofEventName(name$).subscribe({
+            next: (event) =>
+                setEvent({
+                    data: event,
+                    error: null
+                })
+        });
 
         return () => {
-            // unsubscribe from the event bus
-            //eventBus.unsubscribe(name$);
+            eventBus.unsubscribe(name$);
         };
     }, []);
 

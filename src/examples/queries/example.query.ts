@@ -1,3 +1,5 @@
+import { Service as Injectable } from "typedi";
+
 import { IQuery, IQueryHandler, QueryHandler } from "../../cqrs";
 
 export interface ExampleQueryDataItem {
@@ -9,6 +11,7 @@ export class ExampleQuery implements IQuery {
     constructor(public readonly skip: number = 0, public readonly take: number = 1) {}
 }
 
+@Injectable()
 @QueryHandler(ExampleQuery)
 export class ExampleQueryHandler implements IQueryHandler<ExampleQuery> {
     async process(query: ExampleQuery) {

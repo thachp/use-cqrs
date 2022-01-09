@@ -1,4 +1,5 @@
 import { IsNumber, Max, Min } from "class-validator";
+import { Service as Injectable } from "typedi";
 
 import { IQuery, IQueryHandler, QueryHandler } from "../../cqrs";
 
@@ -23,6 +24,7 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
+@Injectable()
 @QueryHandler(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
     async process(query: ExampleValidationQuery) {

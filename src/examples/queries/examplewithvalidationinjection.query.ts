@@ -35,6 +35,7 @@ export class ExampleValidationInjectionQuery implements IQuery {
     }
 }
 
+@Injectable()
 @QueryHandler(ExampleValidationInjectionQuery)
 export class ExampleWithValidationQueryHandler implements IQueryHandler<ExampleValidationInjectionQuery> {
     constructor(public readonly exampleService: ExampleService) {}

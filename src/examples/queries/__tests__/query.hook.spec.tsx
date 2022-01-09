@@ -5,10 +5,15 @@ import useCqrs from "../../../cqrs.provider";
 import { ExampleQueryComponent } from "../components/ExampleQuery.component";
 import { ExampleValidationInjectionComponent } from "../components/ExampleValidationInjectionQuery.component";
 import { ExampleValidationComponent } from "../components/ExampleValidationQuery.component";
+import { ExampleQueryHandler } from "../example.query";
+import { ExampleValidationQueryHandler } from "../examplevalidation.query";
+import { ExampleWithValidationQueryHandler } from "../examplewithvalidationinjection.query";
 
 describe("Test Query Hook with various component types", () => {
     beforeEach(() => {
-        useCqrs.initialize();
+        useCqrs.initialize({
+            queries: [ExampleQueryHandler, ExampleValidationQueryHandler, ExampleWithValidationQueryHandler]
+        });
     });
     test("should return one item on initial render", async () => {
         // arrange && act

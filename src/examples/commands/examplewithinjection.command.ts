@@ -13,6 +13,7 @@ export class ExampleWithInjectionCommand implements ICommand {
     constructor(public readonly hello: string, public readonly name: string) {}
 }
 
+@Injectable()
 @CommandHandler(ExampleWithInjectionCommand)
 export class ExampleWithInjectionCommandHandler implements ICommandHandler<ExampleWithInjectionCommand> {
     constructor(public readonly exampleInjectedService: ExampleInjectedService) {}

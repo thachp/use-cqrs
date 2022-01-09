@@ -1,5 +1,6 @@
 import { Contains, MaxLength, MinLength } from "class-validator";
 
+import { Injectable } from "../..";
 import { CommandHandler, ICommand, ICommandHandler } from "../../cqrs";
 
 export class ExampleWithValidationCommand implements ICommand {
@@ -16,6 +17,7 @@ export class ExampleWithValidationCommand implements ICommand {
     }
 }
 
+@Injectable()
 @CommandHandler(ExampleWithValidationCommand)
 export class ExampleWithValidationCommandHandler implements ICommandHandler<ExampleWithValidationCommand> {
     constructor() {}

@@ -2,32 +2,24 @@
 
 # useCQRS
 
-useCQRS is a React hooks library for applying CQRS design patterns and Single Responsiblity Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent().
+useCQRS is a React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent().
 
--   Use the useCommand() hook to do something
--   Use the useQuery() hook to ask for something
--   Use the useEvent() hook to react to what has been done
+-   Use the useCommand() hook to do something.
+-   Use the useQuery() hook to ask for something.
+-   Use the useEvent() hook to react to what has been done.
 
-### Goals & Intentions
+## Goals & Intentions
 
-This package will be considered a success if the following goals are achieved.
+This package will be considered a success if the following goals are achieved:
 
-1. For more ubiquitous language between frontend and backend development, where frontend and backend developers use the same domain-driven verbs and nouns in all application layers.
+1. Frontend and backend developers use the same domain-driven verbs and nouns in their layers. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences (Khorikov, 2018).
 
-    ![goodbad](https://user-images.githubusercontent.com/1495371/147892717-a2885610-18cf-412d-9f51-acd3c665f60c.png)
+2. Apply Single Responsibility Principle (SRP) in developing React components. SRP is one of the SOLID principles, which states that a "module should be responsible to one, and only one, actor. (Martin, 2017)" A React component using CQRS must either do something or ask something, but never both.
 
-    Avoid using HTTP / CRUD verbs to describe user actions. Use terms like “begin “or “complete” a “questionnaire“ if the web application is intended for users to submit a questionnaire.
-
-    Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences (Khorikov, 2018).
-
-2. Apply Single Responsiblity Principle (SRP) in developing React components. SRP is one of the SOLID principles, which state that a "module should be responsible to one, and only one, actor. (Martin, 2017)" A React component using CQRS must either do something or ask something, but never both.
-
-    - A component must use either the useCommand() or useQuery hook but never both hooks at the same time.
+    - A component must use either the useCommand() or useQuery hook but never both hooks.
     - A component may use multiple useEvent() but keep the count minimal.
 
-3. For more frontend developers to consider CQRS patterns and domain design principles. CQRS has proven to achieve higher marks for maintainability and simplicity.
-
-### Installing
+## Installing
 
 Using npm
 
@@ -54,16 +46,16 @@ Add these settings to your tsconfig.json
 
 ### Getting started
 
-Register handlers
-
 ```typescript
-import {useCqrs} from "@thachp/useCqrs"
+import { useCqrs } from "@thachp/useCqrs";
 
+//Register your handlers on start
 useCqrs.initialize({
-    queries:
-    commands: [ExampleCommandHandler, ExampleWithValidationCommandHandler]
+    queries: [ExampleValidationQueryHandler],
+    commands: [],
+    events: [],
+    sagas: []
 });
-
 ```
 
 Ask something with useQuery()
@@ -113,9 +105,13 @@ export interface ExampleQueryDataItem {
     name: string;
 }
 
-// Support dependency injection of classes, token
+// Support dependency injection
+// AnyGraphQLClient is injected into ExampleModel
+
 @Injectable()
-class ExampleValidationInjectedService {
+class ExampleModel extends AggregateRoot {
+    constructor(public readonly httpClient: AnyGraphQLClient);
+
     doSomething() {
         console.log("I am alive!");
     }
@@ -138,11 +134,12 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
-// Register the handler, so useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
-@Injectable(ExampleValidationQuery.name)
+// Register the handler with Injectable and QueryHandler decorators, so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
+@Injectable()
+@QueryHandler(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
-    // ExampleValidationInjectedService is injectable
-    constructor(public readonly exampleInjectedService: ExampleValidationInjectedService) {}
+    // exampleModel is injectable
+    constructor(public readonly exampleModel: ExampleModel) {}
 
     // business logic here
     async process(query: ExampleValidationQuery) {
@@ -176,8 +173,9 @@ export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValid
 }
 ```
 
-Use the useQuery() hook to dispatch the Query message.
-In this case, ExampleValidationQueryHandler will be called when the component first rendered and when the user clicks on the More button.
+Use the useQuery() hook to dispatch the Query message, which will be consumed by the QueryHandler
+
+In this example, ExampleValidationQueryHandler will be called when the component first render and when the user clicks on the More button.
 
 ```typescript
 import { useQuery } from "@thachp/use-cqrs";
@@ -239,6 +237,8 @@ useCQRS is dependent on the following modules:
 -   Greg Young - CQRS and Event Sourcing - Code on the Beach 2014. (2014, September 8). [Video]. YouTube. https://www.youtube.com/watch?v=JHGkaShoyNs
 -   Martin, R. C., O’Brien, T., & Books, U. (2017). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Upfront Books.
 -   Khorikov, V. (2018, October 18). CQRS in Practice. Pluralsight.com. Retrieved January 3, 2022, from https://www.pluralsight.com/courses/cqrs-in-practice?aid=7010a000001xAKZAA2
+
+-   Van Veen, B. (2019, March 1). Different kinds of service bus: command bus, service bus and query bus. Barry van Veen. Retrieved January 9, 2022, from https://barryvanveen.nl/articles/59-different-kinds-of-service-bus-command-bus-service-bus-and-query-bus
 
 ### Credits
 

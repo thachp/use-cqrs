@@ -47,7 +47,7 @@ Add these settings to your tsconfig.json
 ## Getting started
 
 ```typescript
-import { useCqrs } from "@thachp/useCqrs";
+import { useCqrs } from "use-cqrs";
 
 //Register your handlers on start
 useCqrs.initialize({
@@ -98,7 +98,7 @@ Each query, command, and event must have its corresponding handler. Below are ex
 Validation decorators can be used to perform field validation. Services classes could also be injected into the handler.
 
 ```typescript
-import { IQuery, IQueryHandler, Injectable } from "@thachp/use-cqrs";
+import { IQuery, IQueryHandler, Injectable } from "use-cqrs";
 import { IsNumber, Max, Min } from "class-validator";
 
 export interface ExampleQueryDataItem {
@@ -180,7 +180,7 @@ Use the useQuery() hook to dispatch the Query message, which will be consumed by
 In this example, ExampleValidationQueryHandler will be called when the component first render and when the user clicks on the More button.
 
 ```typescript
-import { useQuery } from "@thachp/use-cqrs";
+import { useQuery } from "use-cqrs";
 import { ExampleValidationQuery } from "../examplevalidation.query";
 
 export const ExampleQueryComponent = () => {

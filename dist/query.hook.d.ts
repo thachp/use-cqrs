@@ -7,8 +7,13 @@ export interface IQueryResults<TData, TError> {
     error: TError | Array<ValidationError>;
 }
 /**
- * The Query object is used to send a query to the query bus.
+ * A query ask for something, signal a question.
+ * The Query object is loaded on to the query bus.
+ * One query is handled by one query handler.
+ * Queries return data and should not change the state of the application.
  * @param query
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns void
  */
 export declare const useQuery: <TData = any, TError = [ValidationError]>(query: IQuery, validatorOptions?: ValidatorOptions) => [IQueryResults<TData, TError>, (query: IQuery) => void];
 export default useQuery;

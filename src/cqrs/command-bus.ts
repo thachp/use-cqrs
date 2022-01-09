@@ -42,12 +42,7 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
             throw new CommandHandlerNotFoundException(commandId);
         }
         this.subject$.next(command);
-
-        console.log("command-bus", handler, command);
-
-        const results = handler.execute(command);
-
-        return results;
+        return handler.execute(command);
     }
 
     bind<T extends CommandBase>(handler: ICommandHandler<T>, id: string) {

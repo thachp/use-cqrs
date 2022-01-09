@@ -15,11 +15,14 @@ const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
 /**
- * The command object is used to send a command to the command bus.
- * @param command
- * @returns CommandResults
+ * Signal the user's intentions. Tell the system to do something.
+ * One command is handled by one command handler.
+ * Commands change the state of the application, but should not return data with the exception of errors.
+ * @param initialCommand  Optional The command to be sent to the command bus.
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns
  */
-const useCommand = (validatorOptions) => {
+const useCommand = (initialCommand, validatorOptions) => {
     // initialize state with loading to true
     const [result, setResult] = React.useState({
         loading: false,
@@ -31,7 +34,11 @@ const useCommand = (validatorOptions) => {
         isMounted: true
     });
     const commandBus = typedi_1.default.get(cqrs_1.CommandBus);
+    /**
+     * Send the command to the command bus.
+     */
     const execute = React.useCallback((command) => __awaiter(void 0, void 0, void 0, function* () {
+        const commandToSend = command || initialCommand;
         if (!ref.current.result.loading) {
             setResult((ref.current.result = {
                 loading: true,
@@ -40,7 +47,7 @@ const useCommand = (validatorOptions) => {
         }
         // validate fields before sending the command to the command bus
         const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
-        // if there are errors, set the state to the errors
+        // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
             setResult((ref.current.result = {
                 loading: false,
@@ -48,22 +55,18 @@ const useCommand = (validatorOptions) => {
             }));
             return;
         }
-        // set loading state
         setResult((ref.current.result = {
             error: null,
             loading: true
         }));
-        // send the command to the command bus
         try {
-            yield commandBus.execute(command);
-            // set the state to the command results
+            yield commandBus.execute(commandToSend);
             setResult((ref.current.result = {
                 error: null,
                 loading: false
             }));
         }
         catch (error) {
-            // if there is an error, set the state to the error
             setResult((ref.current.result = {
                 error,
                 loading: false

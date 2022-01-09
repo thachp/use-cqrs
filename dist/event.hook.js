@@ -15,20 +15,22 @@ const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
 /**
- *
- * @param name - The name of the event.
- * @param transformer  - Optional, transform the message into IEvent type class.
+ * Signal an event has happened. React to the event.
+ * One event is handled by one event handler.
+ * Events should not return data.
+ * @param name$  The name of the event.
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns
  */
 const useEvent = (name$, validatorOptions) => {
-    // the event bus
     const [event, setEvent] = React.useState({
         error: null,
         data: null
     });
     const eventBus = typedi_1.Container.get(cqrs_1.EventBus);
-    // emit the event
+    // event emitter
     const emit = React.useCallback((event) => __awaiter(void 0, void 0, void 0, function* () {
-        // validate fields before sending the command to the command bus
+        // validate fields before sending the event to the event bus
         const errors = yield (0, class_validator_1.validate)(event, validatorOptions);
         // if there are errors, set the state to the errors
         if (errors.length > 0) {
@@ -41,7 +43,7 @@ const useEvent = (name$, validatorOptions) => {
         eventBus.publish(event);
     }), []);
     React.useEffect(() => {
-        // event coming from the event bus should be send to the state
+        // subscribe to the event by event name and update the state
         eventBus.ofEventName(name$).subscribe({
             next: (event) => setEvent({
                 data: event,
@@ -49,6 +51,8 @@ const useEvent = (name$, validatorOptions) => {
             })
         });
         return () => {
+            // unsubscribe from the event when the component unmounts
+            // this is important to avoid memory leaks
             eventBus.unsubscribe(name$);
         };
     }, []);

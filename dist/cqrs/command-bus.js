@@ -37,9 +37,7 @@ let CommandBus = class CommandBus extends observable_bus_1.ObservableBus {
             throw new command_not_found_exception_1.CommandHandlerNotFoundException(commandId);
         }
         this.subject$.next(command);
-        console.log("command-bus", handler, command);
-        const results = handler.execute(command);
-        return results;
+        return handler.execute(command);
     }
     bind(handler, id) {
         this.handlers.set(id, handler);

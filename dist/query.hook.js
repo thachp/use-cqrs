@@ -16,8 +16,13 @@ const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
 /**
- * The Query object is used to send a query to the query bus.
+ * A query ask for something, signal a question.
+ * The Query object is loaded on to the query bus.
+ * One query is handled by one query handler.
+ * Queries return data and should not change the state of the application.
  * @param query
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns void
  */
 const useQuery = (query, validatorOptions) => {
     const [result, setResult] = React.useState({
@@ -37,7 +42,6 @@ const useQuery = (query, validatorOptions) => {
             });
         }
         try {
-            // process the query
             const results = yield queryBus.process(query);
             return setResult({
                 loading: false,
@@ -53,7 +57,7 @@ const useQuery = (query, validatorOptions) => {
             });
         }
     }), []);
-    // for the intial render, wait for the query to be processed
+    // call process one time on the first render
     React.useEffect(() => {
         process(query);
     }, []);

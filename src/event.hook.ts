@@ -10,15 +10,17 @@ export interface IEventResults<TData = any, TError = any> {
 }
 
 /**
- *
- * @param name - The name of the event.
- * @param transformer  - Optional, transform the message into IEvent type class.
+ * Signal an event has happened. React to the event.
+ * One event is handled by one event handler.
+ * Events should not return data.
+ * @param name$  The name of the event.
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns
  */
 export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
     name$: string,
     validatorOptions?: ValidatorOptions
 ): [IEventResults<TEvent, TError>, (event: IEvent) => void] => {
-    // the event bus
     const [event, setEvent] = React.useState<IEventResults>({
         error: null,
         data: null
@@ -26,9 +28,9 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
 
     const eventBus = Container.get(EventBus);
 
-    // emit the event
+    // event emitter
     const emit = React.useCallback(async (event: IEvent) => {
-        // validate fields before sending the command to the command bus
+        // validate fields before sending the event to the event bus
         const errors = await validate(event, validatorOptions);
 
         // if there are errors, set the state to the errors
@@ -44,7 +46,7 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
     }, []);
 
     React.useEffect(() => {
-        // event coming from the event bus should be send to the state
+        // subscribe to the event by event name and update the state
         eventBus.ofEventName(name$).subscribe({
             next: (event) =>
                 setEvent({
@@ -54,6 +56,8 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
         });
 
         return () => {
+            // unsubscribe from the event when the component unmounts
+            // this is important to avoid memory leaks
             eventBus.unsubscribe(name$);
         };
     }, []);

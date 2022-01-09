@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Container, Service as Injectable } from "typedi";
 
 import { CommandBus } from "./cqrs/command-bus";
@@ -16,9 +15,9 @@ export class CqrsModule {
 
     initialize(options: CqrsOptions = {}) {
         const { events = [], queries = [], sagas = [], commands = [] } = options;
-        this.eventsBus.register(events as any);
+        this.eventsBus.register(events);
         this.commandsBus.register(commands);
-        this.queryBus.register(queries as any);
+        this.queryBus.register(queries);
         this.eventsBus.registerSagas(sagas);
     }
 }

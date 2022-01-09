@@ -1,7 +1,7 @@
 {
-  "name": "@thachp/use-cqrs",
+  "name": "use-cqrs",
   "version": "1.0.0",
-  "description": "Lightweight CQRS hooks for use in React applications",
+  "description": "React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development",
   "author": "Patrick Thach <patrick@om.network>",
   "license": "MIT",
   "scripts": {

@@ -2,6 +2,17 @@
   "name": "use-cqrs",
   "version": "1.0.0-alpha",
   "description": "React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development",
+  "keywords": [
+    "cqrs",
+    "react-hooks",
+    "command",
+    "query",
+    "event",
+    "ddd",
+    "oop",
+    "typescript",
+    "srp"
+  ],
   "author": "Patrick Thach <patrick@om.network>",
   "license": "MIT",
   "repository": {
@@ -19,6 +30,10 @@
     "publish:npm": "npm publish --access public",
     "prerelease": "npm run build",
     "release": "release-it"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
   },
   "testEnvironment": "jsdom",
   "devDependencies": {

@@ -9,28 +9,74 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.useCommand = void 0;
 const class_validator_1 = require("class-validator");
+const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
 /**
- * The command object is used to send a command to the command bus.
- * @param command
- * @returns CommandResults
+ * Signal the user's intentions. Tell the system to do something.
+ * One command is handled by one command handler.
+ * Commands change the state of the application, but should not return data with the exception of errors.
+ * @param initialCommand  Optional The command to be sent to the command bus.
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns
  */
-const useCommand = (command, validatorOptions) => {
-    const commandBus = typedi_1.default.get(cqrs_1.CommandBus);
-    // lazy call the success and error handlers
-    const execute = () => __awaiter(void 0, void 0, void 0, function* () {
-        const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
-        if (errors.length > 0) {
-            return {
-                loading: false,
-                errors: errors
-            };
-        }
-        // execute the command
-        return yield commandBus.execute(command);
+const useCommand = (initialCommand, validatorOptions) => {
+    // initialize state with loading to true
+    const [result, setResult] = React.useState({
+        loading: false,
+        error: null
     });
-    return execute;
+    const ref = React.useRef({
+        result,
+        validatorOptions,
+        isMounted: true
+    });
+    const commandBus = typedi_1.default.get(cqrs_1.CommandBus);
+    /**
+     * Send the command to the command bus.
+     */
+    const execute = React.useCallback((command) => __awaiter(void 0, void 0, void 0, function* () {
+        const commandToSend = command || initialCommand;
+        if (!ref.current.result.loading) {
+            setResult((ref.current.result = {
+                loading: true,
+                error: null
+            }));
+        }
+        // validate fields before sending the command to the command bus
+        const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
+        // if there are validation errors, set the state to the errors
+        if (errors.length > 0) {
+            setResult((ref.current.result = {
+                loading: false,
+                error: errors
+            }));
+            return;
+        }
+        setResult((ref.current.result = {
+            error: null,
+            loading: true
+        }));
+        try {
+            yield commandBus.execute(commandToSend);
+            setResult((ref.current.result = {
+                error: null,
+                loading: false
+            }));
+        }
+        catch (error) {
+            setResult((ref.current.result = {
+                error,
+                loading: false
+            }));
+        }
+    }), []);
+    React.useEffect(() => () => {
+        ref.current.isMounted = false;
+    }, []);
+    return [result, execute];
 };
-exports.default = useCommand;
+exports.useCommand = useCommand;
+exports.default = exports.useCommand;

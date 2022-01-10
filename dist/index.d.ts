@@ -1,8 +1,5 @@
-import { Service } from "typedi";
-declare const _default: {
-    Service: typeof Service;
-    useCommand: <T>(command: import("./cqrs").ICommand, validatorOptions?: import("class-validator").ValidatorOptions) => Function;
-    useEvent: (event: import("./cqrs").IEvent, callback: (event: import("./cqrs").IEvent) => void) => void;
-    useQuery: (query: import("./cqrs").IQuery) => void;
-};
-export default _default;
+export * from "./cqrs/operators/of-name";
+export * from "./command.hook";
+export * from "./event.hook";
+export * from "./query.hook";
+export { Container as IoC, Service as Injectable } from "typedi";

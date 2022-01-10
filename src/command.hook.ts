@@ -1,37 +1,102 @@
-import { validate, ValidatorOptions } from "class-validator";
+import { validate, ValidationError, ValidatorOptions } from "class-validator";
+import * as React from "react";
 import Container from "typedi";
 
-import { CommandResults } from "./common/Results";
 import { CommandBus, ICommand } from "./cqrs";
 
-/**
- * The command object is used to send a command to the command bus.
- * @param command
- * @returns CommandResults
- */
+export interface ICommandResults<TError> {
+    loading: boolean;
+    error: TError | Array<ValidationError>;
+}
 
-export const useCommand = <TError>(
-    command: ICommand,
+/**
+ * Signal the user's intentions. Tell the system to do something.
+ * One command is handled by one command handler.
+ * Commands change the state of the application, but should not return data with the exception of errors.
+ * @param initialCommand  Optional The command to be sent to the command bus.
+ * @param validatorOptions Optional validator options from class-validator.
+ * @returns
+ */
+export const useCommand = <TError = [ValidationError]>(
+    initialCommand?: ICommand,
     validatorOptions?: ValidatorOptions
-): (() => Promise<CommandResults<TError>>) => {
+): [ICommandResults<TError>, (command?: ICommand) => Promise<void>] => {
+    // initialize state with loading to true
+    const [result, setResult] = React.useState<ICommandResults<TError>>({
+        loading: false,
+        error: null
+    });
+
+    const ref = React.useRef({
+        result,
+        validatorOptions,
+        isMounted: true
+    });
+
     const commandBus = Container.get(CommandBus);
 
-    // lazy call to the command bus with field validation
-    const execute = async () => {
-        const errors = await validate(command, validatorOptions);
+    /**
+     * Send the command to the command bus.
+     */
+    const execute = React.useCallback(async (command?: ICommand) => {
+        const commandToSend = command || initialCommand;
 
-        if (errors.length > 0) {
-            return {
-                loading: false,
-                errors: errors
-            };
+        if (!ref.current.result.loading) {
+            setResult(
+                (ref.current.result = {
+                    loading: true,
+                    error: null
+                })
+            );
         }
 
-        // execute the command
-        return await commandBus.execute(command);
-    };
+        // validate fields before sending the command to the command bus
+        const errors = await validate(command, validatorOptions);
 
-    return execute;
+        // if there are validation errors, set the state to the errors
+        if (errors.length > 0) {
+            setResult(
+                (ref.current.result = {
+                    loading: false,
+                    error: errors
+                })
+            );
+            return;
+        }
+
+        setResult(
+            (ref.current.result = {
+                error: null,
+                loading: true
+            })
+        );
+
+        try {
+            await commandBus.execute(commandToSend);
+            setResult(
+                (ref.current.result = {
+                    error: null,
+                    loading: false
+                })
+            );
+        } catch (error: any) {
+            setResult(
+                (ref.current.result = {
+                    error,
+                    loading: false
+                })
+            );
+        }
+    }, []);
+
+    React.useEffect(
+        () => () => {
+            ref.current.isMounted = false;
+        },
+        []
+    );
+
+    return [result, execute];
 };
 
 export default useCommand;

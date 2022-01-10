@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ICommand } from "../interfaces";
+import { ICommand } from "../interfaces/commands/command.interface";
 /**
  * Decorator that marks a class as a Nest command handler. A command handler
  * handles commands (actions) executed by your application code.

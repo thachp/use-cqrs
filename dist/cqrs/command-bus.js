@@ -12,12 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandBus = void 0;
 require("reflect-metadata");
 const typedi_1 = require("typedi");
+const _1 = require(".");
+const constants_1 = require("./decorators/constants");
 const command_not_found_exception_1 = require("./exceptions/command-not-found.exception");
 const default_command_pubsub_1 = require("./helpers/default-command-pubsub");
 const observable_bus_1 = require("./utils/observable-bus");
 let CommandBus = class CommandBus extends observable_bus_1.ObservableBus {
     constructor() {
         super();
+        this.handlers = new Map();
+        this.moduleRef = typedi_1.Container;
         this.useDefaultPublisher();
     }
     get publisher() {
@@ -27,12 +31,43 @@ let CommandBus = class CommandBus extends observable_bus_1.ObservableBus {
         this._publisher = _publisher;
     }
     execute(command) {
-        const handler = typedi_1.Container.get(command.constructor.name);
+        const commandId = this.getCommandId(command);
+        const handler = this.handlers.get(commandId);
         if (!handler) {
-            throw new command_not_found_exception_1.CommandHandlerNotFoundException(command.constructor.name);
+            throw new command_not_found_exception_1.CommandHandlerNotFoundException(commandId);
         }
         this.subject$.next(command);
         return handler.execute(command);
+    }
+    bind(handler, id) {
+        this.handlers.set(id, handler);
+    }
+    register(handlers = []) {
+        handlers.forEach((handler) => this.registerHandler(handler));
+    }
+    registerHandler(handler) {
+        const instance = this.moduleRef.get(handler);
+        if (!instance) {
+            return;
+        }
+        const target = this.reflectCommandId(handler);
+        if (!target) {
+            throw new _1.InvalidCommandHandlerException();
+        }
+        this.bind(instance, target);
+    }
+    getCommandId(command) {
+        const { constructor: commandType } = Object.getPrototypeOf(command);
+        const commandMetadata = Reflect.getMetadata(constants_1.COMMAND_METADATA, commandType);
+        if (!commandMetadata) {
+            throw new command_not_found_exception_1.CommandHandlerNotFoundException(commandType.name);
+        }
+        return commandMetadata.id;
+    }
+    reflectCommandId(handler) {
+        const command = Reflect.getMetadata(constants_1.COMMAND_HANDLER_METADATA, handler);
+        const commandMetadata = Reflect.getMetadata(constants_1.COMMAND_METADATA, command);
+        return commandMetadata.id;
     }
     useDefaultPublisher() {
         this._publisher = new default_command_pubsub_1.DefaultCommandPubSub(this.subject$);

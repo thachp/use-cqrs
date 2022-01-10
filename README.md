@@ -98,7 +98,7 @@ Each query, command, and event must have its corresponding handler. Below are an
 You may use validation decorators to perform field validation and inject classes into the handler.
 
 ```typescript
-import { IQuery, IQueryHandler, Injectable } from "use-cqrs";
+import { IQuery, IQueryHandler, Injectable, AggregateRoot } from "use-cqrs";
 import { IsNumber, Max, Min } from "class-validator";
 
 export interface ExampleQueryDataItem {
@@ -149,7 +149,7 @@ export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValid
         const { skip, take } = query;
 
         // invoke injected service class
-        this.exampleInjectedService.doSomething();
+        this.exampleModel.querySomething();
 
         // samples
         const data: Array<ExampleQueryDataItem> = [

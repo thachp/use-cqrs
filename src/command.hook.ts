@@ -1,6 +1,6 @@
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
-import Container from "typedi";
+import { Container as IoC } from "typedi";
 
 import { CommandBus, ICommand } from "./cqrs";
 
@@ -33,13 +33,17 @@ export const useCommand = <TError = [ValidationError]>(
         isMounted: true
     });
 
-    const commandBus = Container.get(CommandBus);
+    const commandBus = IoC.get(CommandBus);
 
     /**
      * Send the command to the command bus.
      */
     const execute = React.useCallback(async (command?: ICommand) => {
         const commandToSend = command || initialCommand;
+
+        if (!commandToSend) {
+            throw new Error("No command was provided to execute.");
+        }
 
         if (!ref.current.result.loading) {
             setResult(

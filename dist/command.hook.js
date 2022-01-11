@@ -33,12 +33,15 @@ const useCommand = (initialCommand, validatorOptions) => {
         validatorOptions,
         isMounted: true
     });
-    const commandBus = typedi_1.default.get(cqrs_1.CommandBus);
+    const commandBus = typedi_1.Container.get(cqrs_1.CommandBus);
     /**
      * Send the command to the command bus.
      */
     const execute = React.useCallback((command) => __awaiter(void 0, void 0, void 0, function* () {
         const commandToSend = command || initialCommand;
+        if (!commandToSend) {
+            throw new Error("No command was provided to execute.");
+        }
         if (!ref.current.result.loading) {
             setResult((ref.current.result = {
                 loading: true,

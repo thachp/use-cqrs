@@ -15,6 +15,7 @@ __exportStar(require("./cqrs/operators/of-name"), exports);
 __exportStar(require("./command.hook"), exports);
 __exportStar(require("./event.hook"), exports);
 __exportStar(require("./query.hook"), exports);
+__exportStar(require("./cqrs"), exports);
 var typedi_1 = require("typedi");
 Object.defineProperty(exports, "IoC", { enumerable: true, get: function () { return typedi_1.Container; } });
 Object.defineProperty(exports, "Injectable", { enumerable: true, get: function () { return typedi_1.Service; } });

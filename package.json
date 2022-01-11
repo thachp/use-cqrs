@@ -33,7 +33,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "directory": "dist"
+    "registry": "https://registry.npmjs.org"
   },
   "testEnvironment": "jsdom",
   "devDependencies": {

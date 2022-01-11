@@ -4,12 +4,11 @@ import * as React from "react";
 import { useCqrs } from "../cqrs.provider";
 import { ExampledEventComponent } from "./fixtures/events/components/ExampledEvent.component";
 import { ExampledEventHandler } from "./fixtures/events/exampled.event";
-import { ExampledExceptionEventHandler } from "./fixtures/events/exampledexception.event";
 
 describe("Test Event Hook with various component types", () => {
     beforeEach(() => {
         useCqrs.initialize({
-            events: [ExampledEventHandler, ExampledExceptionEventHandler]
+            events: [ExampledEventHandler]
         });
     });
 

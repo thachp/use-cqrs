@@ -1,6 +1,6 @@
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
-import { Container } from "typedi";
+import { Container as IoC } from "typedi";
 
 import { EventBus, IEvent } from "./cqrs";
 
@@ -26,7 +26,7 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
         data: null
     });
 
-    const eventBus = Container.get(EventBus);
+    const eventBus = IoC.get(EventBus);
 
     // event emitter
     const emit = React.useCallback(async (event: IEvent) => {

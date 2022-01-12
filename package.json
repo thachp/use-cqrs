@@ -1,6 +1,6 @@
 {
   "name": "use-cqrs",
-  "version": "1.0.3-alpha",
+  "version": "1.0.4-alpha",
   "description": "React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development",
   "keywords": [
     "cqrs",
@@ -19,6 +19,8 @@
     "type": "git",
     "url": "git+https://github.com/thachp/use-cqrs.git"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "build": "tsc -p tsconfig.json",

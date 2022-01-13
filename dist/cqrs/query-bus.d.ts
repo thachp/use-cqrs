@@ -11,9 +11,9 @@ export declare class QueryBus<QueryBase extends IQuery = IQuery> extends Observa
     get publisher(): IQueryPublisher<QueryBase>;
     set publisher(_publisher: IQueryPublisher<QueryBase>);
     process<T extends QueryBase, TResult = any>(query: T): Promise<TResult>;
-    bind<T extends QueryBase, TResult = any>(handler: IQueryHandler<T, TResult>, queryId: string): void;
     register(handlers?: QueryHandlerType<QueryBase>[]): void;
     protected registerHandler(handler: QueryHandlerType<QueryBase>): void;
+    private bind;
     private getQueryId;
     private reflectQueryId;
     private useDefaultPublisher;

@@ -11,9 +11,9 @@ export declare class CommandBus<CommandBase extends ICommand = ICommand> extends
     get publisher(): ICommandPublisher<CommandBase>;
     set publisher(_publisher: ICommandPublisher<CommandBase>);
     execute<T extends CommandBase, R = any>(command: T): Promise<R>;
-    bind<T extends CommandBase>(handler: ICommandHandler<T>, id: string): void;
     register(handlers?: CommandHandlerType[]): void;
     protected registerHandler(handler: CommandHandlerType): void;
+    private bind;
     private getCommandId;
     private reflectCommandId;
     private useDefaultPublisher;

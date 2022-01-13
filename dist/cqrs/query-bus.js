@@ -51,9 +51,6 @@ let QueryBus = class QueryBus extends observable_bus_1.ObservableBus {
             return result;
         });
     }
-    bind(handler, queryId) {
-        this.handlers.set(queryId, handler);
-    }
     register(handlers = []) {
         handlers.forEach((handler) => this.registerHandler(handler));
     }
@@ -67,6 +64,9 @@ let QueryBus = class QueryBus extends observable_bus_1.ObservableBus {
             throw new invalid_query_handler_exception_1.InvalidQueryHandlerException();
         }
         this.bind(instance, target);
+    }
+    bind(handler, queryId) {
+        this.handlers.set(queryId, handler);
     }
     getQueryId(query) {
         const { constructor: queryType } = Object.getPrototypeOf(query);

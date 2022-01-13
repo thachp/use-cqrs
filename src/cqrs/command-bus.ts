@@ -45,10 +45,6 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
         return handler.execute(command);
     }
 
-    bind<T extends CommandBase>(handler: ICommandHandler<T>, id: string) {
-        this.handlers.set(id, handler);
-    }
-
     register(handlers: CommandHandlerType[] = []) {
         handlers.forEach((handler) => this.registerHandler(handler));
     }
@@ -64,6 +60,10 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
             throw new InvalidCommandHandlerException();
         }
         this.bind(instance as ICommandHandler<CommandBase>, target);
+    }
+
+    private bind<T extends CommandBase>(handler: ICommandHandler<T>, id: string) {
+        this.handlers.set(id, handler);
     }
 
     private getCommandId(command: CommandBase): string {

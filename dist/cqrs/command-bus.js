@@ -39,9 +39,6 @@ let CommandBus = class CommandBus extends observable_bus_1.ObservableBus {
         this.subject$.next(command);
         return handler.execute(command);
     }
-    bind(handler, id) {
-        this.handlers.set(id, handler);
-    }
     register(handlers = []) {
         handlers.forEach((handler) => this.registerHandler(handler));
     }
@@ -55,6 +52,9 @@ let CommandBus = class CommandBus extends observable_bus_1.ObservableBus {
             throw new _1.InvalidCommandHandlerException();
         }
         this.bind(instance, target);
+    }
+    bind(handler, id) {
+        this.handlers.set(id, handler);
     }
     getCommandId(command) {
         const { constructor: commandType } = Object.getPrototypeOf(command);

@@ -2,7 +2,7 @@
 
 # useCQRS
 
-useCQRS is a React hooks library for applying CQRS design pattern and Single Responsibility Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent().
+useCQRS is a React hooks library for applying Command and Query Responsibility Segregation (CQRS) design pattern and Single Responsibility Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent().
 
 -   Use the useCommand() hook to do something.
 -   Use the useQuery() hook to ask for something.
@@ -14,7 +14,7 @@ This package will be considered a success if the following goals are achieved:
 
 1. Frontend and backend developers use the same domain-driven verbs and nouns in their layers. Using ubiquitous language links to task-based thinking, which in the long-term benefits everyone in producing maintainable interfaces (UI / API) and improving user experiences (Khorikov, 2018).
 
-2. Apply Single Responsibility Principle (SRP) in developing React components. SRP is one of the SOLID principles, which states that a "module should be responsible to one, and only one, actor. (Martin, 2017)"
+2. Apply Single Responsibility Principle (SRP) in developing React components. SRP is one of the SOLID principles, which states that a "module should be responsible to one, and only one, actor (Martin, 2017)".
 
     - A component should use either the useCommand() or useQuery hook but never both hooks.
     - A component may use multiple useEvent() but keep the count minimal.
@@ -82,7 +82,7 @@ React to something with useEvent()
 
 ```typescript
 // setup and destructure
-const [{data, error}, emit] = useEvent<DataType, ErrorType>(nameOf<WhateverChanged>());
+const [{ data, error }, emit] = useEvent<DataType, ErrorType>(nameOf<WhateverChanged>());
 
 // optionally, invoke emit to publish an event
 emit(new SomethingChanged(value));
@@ -94,7 +94,7 @@ emit(new SomethingChanged(value));
 
 ## Examples
 
-Each query, command, and event must have its corresponding handler. Below are examples of classes for a query and its handler. 
+Each query, command, and event must have its corresponding handler. Below are examples of classes for a query and its handler.
 You may use validation decorators to perform field validation and inject classes into the handler.
 
 ```typescript
@@ -115,7 +115,6 @@ class ExampleModel extends AggregateRoot {
 
     querySomething() {
         // client.query(...)
-        console.log("I am alive!");
     }
 }
 
@@ -136,7 +135,7 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
-// Register the handler with Injectable and QueryHandler decorators, 
+// Register the handler with Injectable and QueryHandler decorators,
 // so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
 @Injectable()
 @QueryHandler(ExampleValidationQuery)
@@ -166,12 +165,7 @@ export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValid
             });
         }
 
-        // return the data
-        return {
-            loading: false,
-            data,
-            errors: []
-        };
+        return data;
     }
 }
 ```

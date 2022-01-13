@@ -54,11 +54,6 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
         }
         return (events || []).map((event) => this._publisher.publish(event));
     }
-    bind(handler, name) {
-        const stream$ = name ? this.ofEventName(name) : this.subject$;
-        const subscription = stream$.subscribe((event) => handler.handle(event));
-        this.subscriptions.set(name, subscription);
-    }
     registerSagas(types = []) {
         const sagas = types
             .map((target) => {
@@ -96,6 +91,11 @@ let EventBus = class EventBus extends utils_1.ObservableBus {
         }
         const subscription = stream$.pipe((0, operators_1.filter)((e) => !!e)).subscribe((command) => this.commandBus.execute(command));
         this.subscriptions.set(saga.name, subscription);
+    }
+    bind(handler, name) {
+        const stream$ = name ? this.ofEventName(name) : this.subject$;
+        const subscription = stream$.subscribe((event) => handler.handle(event));
+        this.subscriptions.set(name, subscription);
     }
     reflectEventsNames(handler) {
         return Reflect.getMetadata(constants_1.EVENTS_HANDLER_METADATA, handler);

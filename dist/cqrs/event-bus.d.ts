@@ -18,12 +18,12 @@ export declare class EventBus<EventBase extends IEvent = IEvent> extends Observa
     unsubscribeAll(): void;
     publish<T extends EventBase>(event: T): any;
     publishAll<T extends EventBase>(events: T[]): any;
-    bind(handler: IEventHandler<EventBase>, name: string): void;
     registerSagas(types?: Type<unknown>[]): void;
     register(handlers?: EventHandlerType<EventBase>[]): void;
     ofEventName(name: string): Observable<EventBase>;
     protected registerHandler(handler: EventHandlerType<EventBase>): void;
     protected registerSaga(saga: ISaga<EventBase>): void;
+    private bind;
     private reflectEventsNames;
     private useDefaultPublisher;
 }

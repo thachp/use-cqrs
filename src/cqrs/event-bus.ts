@@ -63,12 +63,6 @@ export class EventBus<EventBase extends IEvent = IEvent>
         return (events || []).map((event) => this._publisher.publish(event));
     }
 
-    bind(handler: IEventHandler<EventBase>, name: string) {
-        const stream$ = name ? this.ofEventName(name) : this.subject$;
-        const subscription = stream$.subscribe((event) => handler.handle(event));
-        this.subscriptions.set(name, subscription);
-    }
-
     registerSagas(types: Type<unknown>[] = []) {
         const sagas = types
             .map((target) => {
@@ -113,6 +107,12 @@ export class EventBus<EventBase extends IEvent = IEvent>
         const subscription = stream$.pipe(filter((e) => !!e)).subscribe((command) => this.commandBus.execute(command));
 
         this.subscriptions.set(saga.name, subscription);
+    }
+
+    private bind(handler: IEventHandler<EventBase>, name: string) {
+        const stream$ = name ? this.ofEventName(name) : this.subject$;
+        const subscription = stream$.subscribe((event) => handler.handle(event));
+        this.subscriptions.set(name, subscription);
     }
 
     private reflectEventsNames(handler: EventHandlerType<EventBase>): FunctionConstructor[] {

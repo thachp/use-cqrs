@@ -50,10 +50,6 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
         return result as TResult;
     }
 
-    bind<T extends QueryBase, TResult = any>(handler: IQueryHandler<T, TResult>, queryId: string) {
-        this.handlers.set(queryId, handler);
-    }
-
     register(handlers: QueryHandlerType<QueryBase>[] = []) {
         handlers.forEach((handler) => this.registerHandler(handler));
     }
@@ -68,6 +64,10 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
             throw new InvalidQueryHandlerException();
         }
         this.bind(instance as IQueryHandler<QueryBase, IQueryResult>, target);
+    }
+
+    private bind<T extends QueryBase, TResult = any>(handler: IQueryHandler<T, TResult>, queryId: string) {
+        this.handlers.set(queryId, handler);
     }
 
     private getQueryId(query: QueryBase): string {

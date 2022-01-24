@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventPublisher = void 0;
-const __1 = require("..");
+const typedi_1 = require("typedi");
 const event_bus_1 = require("./event-bus");
 let EventPublisher = class EventPublisher {
     constructor(eventBus) {
@@ -39,7 +39,7 @@ let EventPublisher = class EventPublisher {
     }
 };
 EventPublisher = __decorate([
-    (0, __1.Injectable)(),
+    (0, typedi_1.Service)(),
     __metadata("design:paramtypes", [event_bus_1.EventBus])
 ], EventPublisher);
 exports.EventPublisher = EventPublisher;

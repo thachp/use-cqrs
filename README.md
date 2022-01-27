@@ -72,7 +72,7 @@ Do something with useCommand()
 
 ```typescript
 // setup and destructure
-const [{ error, loading }, execute] = useCommand<ErrorType>();
+const [{ error, loading, done }, execute] = useCommand<ErrorType>();
 
 // invoke execute to do something
 execute(new WhateverCommand(value));

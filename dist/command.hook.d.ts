@@ -1,8 +1,9 @@
-import { ValidationError, ValidatorOptions } from "class-validator";
+import * as Validator from "class-validator";
 import { ICommand } from "./cqrs";
 export interface ICommandResults<TError> {
     loading: boolean;
-    error: TError | Array<ValidationError>;
+    done: boolean;
+    error: TError | Array<Validator.ValidationError>;
 }
 /**
  * Signal the user's intentions. Tell the system to do something.
@@ -12,5 +13,5 @@ export interface ICommandResults<TError> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns
  */
-export declare const useCommand: <TError = [ValidationError]>(initialCommand?: ICommand, validatorOptions?: ValidatorOptions) => [ICommandResults<TError>, (command?: ICommand) => Promise<void>];
+export declare const useCommand: <TError = [Validator.ValidationError]>(initialCommand?: ICommand, validatorOptions?: Validator.ValidatorOptions) => [ICommandResults<TError>, (command?: ICommand) => Promise<void>];
 export default useCommand;

@@ -1,10 +1,10 @@
 import "reflect-metadata";
-import { ValidationError, ValidatorOptions } from "class-validator";
+import * as Validator from "class-validator";
 import { IQuery } from "./cqrs";
 export interface IQueryResults<TData, TError> {
     loading: boolean;
     data: TData;
-    error: TError | Array<ValidationError>;
+    error: TError | Array<Validator.ValidationError>;
 }
 /**
  * A query ask for something, signal a question.
@@ -15,5 +15,5 @@ export interface IQueryResults<TData, TError> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns void
  */
-export declare const useQuery: <TData = any, TError = [ValidationError]>(query: IQuery, validatorOptions?: ValidatorOptions) => [IQueryResults<TData, TError>, (query: IQuery) => void];
+export declare const useQuery: <TData = any, TError = [Validator.ValidationError]>(query: IQuery, validatorOptions?: Validator.ValidatorOptions) => [IQueryResults<TData, TError>, (query: IQuery) => void];
 export default useQuery;

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCommand = void 0;
-const class_validator_1 = require("class-validator");
+const Validator = require("class-validator");
 const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
@@ -26,6 +26,7 @@ const useCommand = (initialCommand, validatorOptions) => {
     // initialize state with loading to true
     const [result, setResult] = React.useState({
         loading: false,
+        done: false,
         error: null
     });
     const ref = React.useRef({
@@ -40,38 +41,43 @@ const useCommand = (initialCommand, validatorOptions) => {
     const execute = React.useCallback((command) => __awaiter(void 0, void 0, void 0, function* () {
         const commandToSend = command || initialCommand;
         if (!commandToSend) {
-            throw new Error("No command was provided to execute.");
+            throw new Error("No command execute.");
         }
         if (!ref.current.result.loading) {
             setResult((ref.current.result = {
                 loading: true,
+                done: false,
                 error: null
             }));
         }
         // validate fields before sending the command to the command bus
-        const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
+        const errors = yield Validator.validate(command, validatorOptions);
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
             setResult((ref.current.result = {
                 loading: false,
+                done: true,
                 error: errors
             }));
             return;
         }
         setResult((ref.current.result = {
             error: null,
+            done: false,
             loading: true
         }));
         try {
             yield commandBus.execute(commandToSend);
             setResult((ref.current.result = {
                 error: null,
+                done: true,
                 loading: false
             }));
         }
         catch (error) {
             setResult((ref.current.result = {
                 error,
+                done: false,
                 loading: false
             }));
         }

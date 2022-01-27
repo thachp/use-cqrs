@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useQuery = void 0;
 require("reflect-metadata");
-const class_validator_1 = require("class-validator");
+const Validator = require("class-validator");
 const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
@@ -33,7 +33,7 @@ const useQuery = (query, validatorOptions) => {
     const queryBus = typedi_1.Container.get(cqrs_1.QueryBus);
     // for lazy loading
     const process = React.useCallback((query) => __awaiter(void 0, void 0, void 0, function* () {
-        const errors = yield (0, class_validator_1.validate)(query, validatorOptions);
+        const errors = yield Validator.validate(query, validatorOptions);
         if (errors.length > 0) {
             return setResult({
                 loading: false,

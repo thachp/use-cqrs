@@ -1,4 +1,4 @@
-import { validate, ValidationError, ValidatorOptions } from "class-validator";
+import * as Validator from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
 
@@ -6,7 +6,8 @@ import { CommandBus, ICommand } from "./cqrs";
 
 export interface ICommandResults<TError> {
     loading: boolean;
-    error: TError | Array<ValidationError>;
+    done: boolean;
+    error: TError | Array<Validator.ValidationError>;
 }
 
 /**
@@ -17,13 +18,14 @@ export interface ICommandResults<TError> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns
  */
-export const useCommand = <TError = [ValidationError]>(
+export const useCommand = <TError = [Validator.ValidationError]>(
     initialCommand?: ICommand,
-    validatorOptions?: ValidatorOptions
+    validatorOptions?: Validator.ValidatorOptions
 ): [ICommandResults<TError>, (command?: ICommand) => Promise<void>] => {
     // initialize state with loading to true
     const [result, setResult] = React.useState<ICommandResults<TError>>({
         loading: false,
+        done: false,
         error: null
     });
 
@@ -42,26 +44,28 @@ export const useCommand = <TError = [ValidationError]>(
         const commandToSend = command || initialCommand;
 
         if (!commandToSend) {
-            throw new Error("No command was provided to execute.");
+            throw new Error("No command execute.");
         }
 
         if (!ref.current.result.loading) {
             setResult(
                 (ref.current.result = {
                     loading: true,
+                    done: false,
                     error: null
                 })
             );
         }
 
         // validate fields before sending the command to the command bus
-        const errors = await validate(command, validatorOptions);
+        const errors = await Validator.validate(command, validatorOptions);
 
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
             setResult(
                 (ref.current.result = {
                     loading: false,
+                    done: true,
                     error: errors
                 })
             );
@@ -71,6 +75,7 @@ export const useCommand = <TError = [ValidationError]>(
         setResult(
             (ref.current.result = {
                 error: null,
+                done: false,
                 loading: true
             })
         );
@@ -80,6 +85,7 @@ export const useCommand = <TError = [ValidationError]>(
             setResult(
                 (ref.current.result = {
                     error: null,
+                    done: true,
                     loading: false
                 })
             );
@@ -87,6 +93,7 @@ export const useCommand = <TError = [ValidationError]>(
             setResult(
                 (ref.current.result = {
                     error,
+                    done: false,
                     loading: false
                 })
             );

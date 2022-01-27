@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { validate, ValidationError, ValidatorOptions } from "class-validator";
+import * as Validator from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
 
@@ -9,7 +9,7 @@ import { IQuery, QueryBus } from "./cqrs";
 export interface IQueryResults<TData, TError> {
     loading: boolean;
     data: TData;
-    error: TError | Array<ValidationError>;
+    error: TError | Array<Validator.ValidationError>;
 }
 
 /**
@@ -21,14 +21,14 @@ export interface IQueryResults<TData, TError> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns void
  */
-export const useQuery = <TData = any, TError = [ValidationError]>(
+export const useQuery = <TData = any, TError = [Validator.ValidationError]>(
     query: IQuery,
-    validatorOptions?: ValidatorOptions
+    validatorOptions?: Validator.ValidatorOptions
 ): [IQueryResults<TData, TError>, (query: IQuery) => void] => {
     const [result, setResult] = React.useState<{
         loading: boolean;
         data: TData;
-        error: TError | Array<ValidationError>;
+        error: TError | Array<Validator.ValidationError>;
     }>({
         loading: true,
         data: null,
@@ -39,7 +39,7 @@ export const useQuery = <TData = any, TError = [ValidationError]>(
 
     // for lazy loading
     const process = React.useCallback(async (query: IQuery) => {
-        const errors = await validate(query, validatorOptions);
+        const errors = await Validator.validate(query, validatorOptions);
 
         if (errors.length > 0) {
             return setResult({

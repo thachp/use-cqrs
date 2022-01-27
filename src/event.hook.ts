@@ -1,4 +1,4 @@
-import { validate, ValidationError, ValidatorOptions } from "class-validator";
+import * as Validator from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
 
@@ -17,9 +17,9 @@ export interface IEventResults<TData = any, TError = any> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns
  */
-export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
+export const useEvent = <TEvent = IEvent, TError = [Validator.ValidationError]>(
     name$: string,
-    validatorOptions?: ValidatorOptions
+    validatorOptions?: Validator.ValidatorOptions
 ): [IEventResults<TEvent, TError>, (event: IEvent) => void] => {
     const [event, setEvent] = React.useState<IEventResults>({
         error: null,
@@ -31,7 +31,7 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
     // event emitter
     const emit = React.useCallback(async (event: IEvent) => {
         // validate fields before sending the event to the event bus
-        const errors = await validate(event, validatorOptions);
+        const errors = await Validator.validate(event, validatorOptions);
 
         // if there are errors, set the state to the errors
         if (errors.length > 0) {

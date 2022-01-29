@@ -1,3 +1,4 @@
+import { useContainer } from "class-validator";
 import { Container, Service as Injectable } from "typedi";
 
 import { CommandBus } from "./cqrs/command-bus";
@@ -22,5 +23,9 @@ export class CqrsModule {
     }
 }
 
+// inject dependencies into custom validator constraint classes
+useContainer(Container, { fallbackOnErrors: true });
+
 export const useCqrs = Container.get(CqrsModule);
+
 export default useCqrs;

@@ -47,7 +47,10 @@ describe("Test Query Hook with various component types", () => {
         await act(async () => render(<ExampleValidationComponent />));
 
         // assert
-        expect(screen.getByText(/Errors.../)).toBeTruthy();
+        await waitFor(() => screen.getByTestId("errors"));
+        expect(screen.getByTestId("errors").textContent).toContain("take");
+        expect(screen.getByTestId("errors").textContent).toContain("skip");
+        expect(screen.getByTestId("errors").textContent).toContain("text");
     });
 
     test("should return 3 items from example service", async () => {

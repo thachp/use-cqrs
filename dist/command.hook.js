@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCommand = void 0;
-const Validator = require("class-validator");
+const class_validator_1 = require("class-validator");
 const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
@@ -51,7 +51,7 @@ const useCommand = (initialCommand, validatorOptions) => {
             }));
         }
         // validate fields before sending the command to the command bus
-        const errors = yield Validator.validate(command, validatorOptions);
+        const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
             setResult((ref.current.result = {

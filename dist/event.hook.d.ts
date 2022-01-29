@@ -1,4 +1,4 @@
-import * as Validator from "class-validator";
+import { ValidationError, ValidatorOptions } from "class-validator";
 import { IEvent } from "./cqrs";
 export interface IEventResults<TData = any, TError = any> {
     error: TError;
@@ -12,5 +12,5 @@ export interface IEventResults<TData = any, TError = any> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns
  */
-export declare const useEvent: <TEvent = IEvent, TError = [Validator.ValidationError]>(name$: string, validatorOptions?: Validator.ValidatorOptions) => [IEventResults<TEvent, TError>, (event: IEvent) => void];
+export declare const useEvent: <TEvent = IEvent, TError = [ValidationError]>(name$: string, validatorOptions?: ValidatorOptions) => [IEventResults<TEvent, TError>, (event: IEvent) => void];
 export default useEvent;

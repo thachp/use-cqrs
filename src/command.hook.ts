@@ -1,4 +1,4 @@
-import * as Validator from "class-validator";
+import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
 
@@ -7,7 +7,7 @@ import { CommandBus, ICommand } from "./cqrs";
 export interface ICommandResults<TError> {
     loading: boolean;
     done: boolean;
-    error: TError | Array<Validator.ValidationError>;
+    error: TError | Array<ValidationError>;
 }
 
 /**
@@ -18,9 +18,9 @@ export interface ICommandResults<TError> {
  * @param validatorOptions Optional validator options from class-validator.
  * @returns
  */
-export const useCommand = <TError = [Validator.ValidationError]>(
+export const useCommand = <TError = [ValidationError]>(
     initialCommand?: ICommand,
-    validatorOptions?: Validator.ValidatorOptions
+    validatorOptions?: ValidatorOptions
 ): [ICommandResults<TError>, (command?: ICommand) => Promise<void>] => {
     // initialize state with loading to true
     const [result, setResult] = React.useState<ICommandResults<TError>>({
@@ -58,7 +58,7 @@ export const useCommand = <TError = [Validator.ValidationError]>(
         }
 
         // validate fields before sending the command to the command bus
-        const errors = await Validator.validate(command, validatorOptions);
+        const errors = await validate(command, validatorOptions);
 
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {

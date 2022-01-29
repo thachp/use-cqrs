@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useEvent = void 0;
-const Validator = require("class-validator");
+const class_validator_1 = require("class-validator");
 const React = require("react");
 const typedi_1 = require("typedi");
 const cqrs_1 = require("./cqrs");
@@ -31,7 +31,7 @@ const useEvent = (name$, validatorOptions) => {
     // event emitter
     const emit = React.useCallback((event) => __awaiter(void 0, void 0, void 0, function* () {
         // validate fields before sending the event to the event bus
-        const errors = yield Validator.validate(event, validatorOptions);
+        const errors = yield (0, class_validator_1.validate)(event, validatorOptions);
         // if there are errors, set the state to the errors
         if (errors.length > 0) {
             return setEvent({

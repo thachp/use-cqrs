@@ -1,7 +1,8 @@
-import { IsNumber, Max, Min } from "class-validator";
+import { IsNumber, Max, Min, Validate } from "class-validator";
 import { Service as Injectable } from "typedi";
 
 import { IQuery, IQueryHandler, QueryHandler } from "../../../cqrs";
+import { MatchTextValidator } from "../validators/matchtext.validator";
 
 export interface ExampleQueryDataItem {
     id: string;
@@ -18,9 +19,13 @@ export class ExampleValidationQuery implements IQuery {
     @Min(0)
     public readonly take: number;
 
-    constructor(skip: number = 0, take: number = 1) {
+    @Validate(MatchTextValidator)
+    public readonly text: string;
+
+    constructor(skip: number = 0, take: number = 1, text: string = "") {
         this.skip = skip;
         this.take = take;
+        this.text = text;
     }
 }
 

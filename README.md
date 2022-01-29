@@ -1,4 +1,5 @@
 ![build](https://github.com/thachp/use-cqrs/actions/workflows/main.yml/badge.svg)
+![download](https://img.shields.io/npm/dw/use-cqrs)
 
 # useCQRS
 

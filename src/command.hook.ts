@@ -29,7 +29,7 @@ export const useCommand = <TError = [ValidationError]>(
         error: null
     });
 
-    const ref = React.useRef({
+    const mountedRef = React.useRef({
         result,
         validatorOptions,
         isMounted: true
@@ -47,9 +47,9 @@ export const useCommand = <TError = [ValidationError]>(
             throw new Error("No command execute.");
         }
 
-        if (!ref.current.result.loading) {
+        if (!mountedRef.current.result.loading) {
             setResult(
-                (ref.current.result = {
+                (mountedRef.current.result = {
                     loading: true,
                     done: false,
                     error: null
@@ -63,7 +63,7 @@ export const useCommand = <TError = [ValidationError]>(
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
             setResult(
-                (ref.current.result = {
+                (mountedRef.current.result = {
                     loading: false,
                     done: true,
                     error: errors
@@ -73,7 +73,7 @@ export const useCommand = <TError = [ValidationError]>(
         }
 
         setResult(
-            (ref.current.result = {
+            (mountedRef.current.result = {
                 error: null,
                 done: false,
                 loading: true
@@ -83,7 +83,7 @@ export const useCommand = <TError = [ValidationError]>(
         try {
             await commandBus.execute(commandToSend);
             setResult(
-                (ref.current.result = {
+                (mountedRef.current.result = {
                     error: null,
                     done: true,
                     loading: false
@@ -91,7 +91,7 @@ export const useCommand = <TError = [ValidationError]>(
             );
         } catch (error: any) {
             setResult(
-                (ref.current.result = {
+                (mountedRef.current.result = {
                     error,
                     done: false,
                     loading: false
@@ -102,7 +102,7 @@ export const useCommand = <TError = [ValidationError]>(
 
     React.useEffect(
         () => () => {
-            ref.current.isMounted = false;
+            (mountedRef as any).current = false;
         },
         []
     );

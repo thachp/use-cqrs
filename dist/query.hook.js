@@ -30,10 +30,13 @@ const useQuery = (query, validatorOptions) => {
         data: null,
         error: null
     });
+    const mountedRef = React.useRef(true);
     const queryBus = typedi_1.Container.get(cqrs_1.QueryBus);
     // for lazy loading
     const process = React.useCallback((query) => __awaiter(void 0, void 0, void 0, function* () {
         const errors = yield Validator.validate(query, validatorOptions);
+        if (!mountedRef.current)
+            return null;
         if (errors.length > 0) {
             return setResult({
                 loading: false,
@@ -60,6 +63,10 @@ const useQuery = (query, validatorOptions) => {
     // call process one time on the first render
     React.useEffect(() => {
         process(query);
+        return () => {
+            // unmounting
+            mountedRef.current = false;
+        };
     }, []);
     return [result, process];
 };

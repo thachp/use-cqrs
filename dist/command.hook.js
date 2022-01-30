@@ -29,7 +29,7 @@ const useCommand = (initialCommand, validatorOptions) => {
         done: false,
         error: null
     });
-    const ref = React.useRef({
+    const mountedRef = React.useRef({
         result,
         validatorOptions,
         isMounted: true
@@ -43,8 +43,8 @@ const useCommand = (initialCommand, validatorOptions) => {
         if (!commandToSend) {
             throw new Error("No command execute.");
         }
-        if (!ref.current.result.loading) {
-            setResult((ref.current.result = {
+        if (!mountedRef.current.result.loading) {
+            setResult((mountedRef.current.result = {
                 loading: true,
                 done: false,
                 error: null
@@ -54,28 +54,28 @@ const useCommand = (initialCommand, validatorOptions) => {
         const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
-            setResult((ref.current.result = {
+            setResult((mountedRef.current.result = {
                 loading: false,
                 done: true,
                 error: errors
             }));
             return;
         }
-        setResult((ref.current.result = {
+        setResult((mountedRef.current.result = {
             error: null,
             done: false,
             loading: true
         }));
         try {
             yield commandBus.execute(commandToSend);
-            setResult((ref.current.result = {
+            setResult((mountedRef.current.result = {
                 error: null,
                 done: true,
                 loading: false
             }));
         }
         catch (error) {
-            setResult((ref.current.result = {
+            setResult((mountedRef.current.result = {
                 error,
                 done: false,
                 loading: false
@@ -83,7 +83,7 @@ const useCommand = (initialCommand, validatorOptions) => {
         }
     }), []);
     React.useEffect(() => () => {
-        ref.current.isMounted = false;
+        mountedRef.current = false;
     }, []);
     return [result, execute];
 };

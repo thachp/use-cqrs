@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCommand = void 0;
+const equality_1 = require("@wry/equality");
 const class_validator_1 = require("class-validator");
 const React = require("react");
 const typedi_1 = require("typedi");
@@ -29,8 +30,9 @@ const useCommand = (initialCommand, validatorOptions) => {
         done: false,
         error: null
     });
-    const mountedRef = React.useRef({
+    const ref = React.useRef({
         result,
+        commandId: 0,
         validatorOptions,
         isMounted: true
     });
@@ -43,39 +45,46 @@ const useCommand = (initialCommand, validatorOptions) => {
         if (!commandToSend) {
             throw new Error("No command execute.");
         }
-        if (!mountedRef.current.result.loading) {
-            setResult((mountedRef.current.result = {
+        if (!ref.current.result.loading) {
+            setResult((ref.current.result = {
                 loading: true,
                 done: false,
                 error: null
             }));
         }
+        const commandId = ++ref.current.commandId;
         // validate fields before sending the command to the command bus
         const errors = yield (0, class_validator_1.validate)(command, validatorOptions);
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
-            setResult((mountedRef.current.result = {
+            const result = {
                 loading: false,
                 done: true,
                 error: errors
-            }));
+            };
+            if (ref.current.isMounted && !(0, equality_1.equal)(ref.current.result, result)) {
+                setResult((ref.current.result = result));
+            }
             return;
         }
-        setResult((mountedRef.current.result = {
+        if (!(commandId === ref.current.commandId && ref.current.isMounted)) {
+            return;
+        }
+        setResult((ref.current.result = {
             error: null,
             done: false,
             loading: true
         }));
         try {
             yield commandBus.execute(commandToSend);
-            setResult((mountedRef.current.result = {
+            setResult((ref.current.result = {
                 error: null,
                 done: true,
                 loading: false
             }));
         }
         catch (error) {
-            setResult((mountedRef.current.result = {
+            setResult((ref.current.result = {
                 error,
                 done: false,
                 loading: false
@@ -83,7 +92,7 @@ const useCommand = (initialCommand, validatorOptions) => {
         }
     }), []);
     React.useEffect(() => () => {
-        mountedRef.current = false;
+        ref.current.isMounted = false;
     }, []);
     return [result, execute];
 };

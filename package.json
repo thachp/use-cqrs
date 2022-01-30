@@ -1,6 +1,6 @@
 {
   "name": "use-cqrs",
-  "version": "1.0.10-alpha",
+  "version": "1.0.11-alpha",
   "description": "React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development",
   "keywords": [
     "cqrs",
@@ -57,14 +57,15 @@
     "jest-cli": "^27.4.5",
     "lint-staged": "12.1.4",
     "prettier": "2.5.1",
+    "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "reflect-metadata": "^0.1.13",
     "release-it": "14.11.8",
     "ts-jest": "^27.1.2",
-    "react": "^17.0.2",
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "@wry/equality": "^0.5.2",
     "class-validator": "^0.13.2",
     "rxjs": "7.5.1",
     "typedi": "^0.10.0",

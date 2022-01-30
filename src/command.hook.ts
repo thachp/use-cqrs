@@ -1,3 +1,4 @@
+import { equal } from "@wry/equality";
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
@@ -29,8 +30,9 @@ export const useCommand = <TError = [ValidationError]>(
         error: null
     });
 
-    const mountedRef = React.useRef({
+    const ref = React.useRef({
         result,
+        commandId: 0,
         validatorOptions,
         isMounted: true
     });
@@ -47,9 +49,9 @@ export const useCommand = <TError = [ValidationError]>(
             throw new Error("No command execute.");
         }
 
-        if (!mountedRef.current.result.loading) {
+        if (!ref.current.result.loading) {
             setResult(
-                (mountedRef.current.result = {
+                (ref.current.result = {
                     loading: true,
                     done: false,
                     error: null
@@ -57,23 +59,31 @@ export const useCommand = <TError = [ValidationError]>(
             );
         }
 
+        const commandId = ++ref.current.commandId;
+
         // validate fields before sending the command to the command bus
         const errors = await validate(command, validatorOptions);
 
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
-            setResult(
-                (mountedRef.current.result = {
-                    loading: false,
-                    done: true,
-                    error: errors
-                })
-            );
+            const result = {
+                loading: false,
+                done: true,
+                error: errors
+            };
+
+            if (ref.current.isMounted && !equal(ref.current.result, result)) {
+                setResult((ref.current.result = result));
+            }
+            return;
+        }
+
+        if (!(commandId === ref.current.commandId && ref.current.isMounted)) {
             return;
         }
 
         setResult(
-            (mountedRef.current.result = {
+            (ref.current.result = {
                 error: null,
                 done: false,
                 loading: true
@@ -83,7 +93,7 @@ export const useCommand = <TError = [ValidationError]>(
         try {
             await commandBus.execute(commandToSend);
             setResult(
-                (mountedRef.current.result = {
+                (ref.current.result = {
                     error: null,
                     done: true,
                     loading: false
@@ -91,7 +101,7 @@ export const useCommand = <TError = [ValidationError]>(
             );
         } catch (error: any) {
             setResult(
-                (mountedRef.current.result = {
+                (ref.current.result = {
                     error,
                     done: false,
                     loading: false
@@ -102,7 +112,7 @@ export const useCommand = <TError = [ValidationError]>(
 
     React.useEffect(
         () => () => {
-            (mountedRef as any).current = false;
+            ref.current.isMounted = false;
         },
         []
     );

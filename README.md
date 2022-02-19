@@ -1,4 +1,5 @@
 ![build](https://github.com/thachp/use-cqrs/actions/workflows/main.yml/badge.svg)
+![download](https://img.shields.io/npm/dw/use-cqrs)
 
 # useCQRS
 
@@ -72,7 +73,7 @@ Do something with useCommand()
 
 ```typescript
 // setup and destructure
-const [{ error, loading }, execute] = useCommand<ErrorType>();
+const [{ error, loading, done }, execute] = useCommand<ErrorType>();
 
 // invoke execute to do something
 execute(new WhateverCommand(value));

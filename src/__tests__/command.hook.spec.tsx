@@ -34,7 +34,8 @@ describe("Test Command Hook", () => {
 
         // assert
         await waitFor(() => screen.getByTestId("errors"));
-        expect(screen.getByTestId("errors").textContent).toBe("Errors...");
+        expect(screen.getByTestId("errors").textContent).toContain("hello");
+        expect(screen.getByTestId("errors").textContent).toContain("name");
     });
 
     test("should render errors from an injected class", async () => {

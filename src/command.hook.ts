@@ -1,3 +1,4 @@
+import { equal } from "@wry/equality";
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
 import { Container as IoC } from "typedi";
@@ -6,6 +7,7 @@ import { CommandBus, ICommand } from "./cqrs";
 
 export interface ICommandResults<TError> {
     loading: boolean;
+    done: boolean;
     error: TError | Array<ValidationError>;
 }
 
@@ -24,11 +26,13 @@ export const useCommand = <TError = [ValidationError]>(
     // initialize state with loading to true
     const [result, setResult] = React.useState<ICommandResults<TError>>({
         loading: false,
+        done: false,
         error: null
     });
 
     const ref = React.useRef({
         result,
+        commandId: 0,
         validatorOptions,
         isMounted: true
     });
@@ -42,35 +46,46 @@ export const useCommand = <TError = [ValidationError]>(
         const commandToSend = command || initialCommand;
 
         if (!commandToSend) {
-            throw new Error("No command was provided to execute.");
+            throw new Error("No command execute.");
         }
 
         if (!ref.current.result.loading) {
             setResult(
                 (ref.current.result = {
                     loading: true,
+                    done: false,
                     error: null
                 })
             );
         }
+
+        const commandId = ++ref.current.commandId;
 
         // validate fields before sending the command to the command bus
         const errors = await validate(command, validatorOptions);
 
         // if there are validation errors, set the state to the errors
         if (errors.length > 0) {
-            setResult(
-                (ref.current.result = {
-                    loading: false,
-                    error: errors
-                })
-            );
+            const result = {
+                loading: false,
+                done: true,
+                error: errors
+            };
+
+            if (ref.current.isMounted && !equal(ref.current.result, result)) {
+                setResult((ref.current.result = result));
+            }
+            return;
+        }
+
+        if (!(commandId === ref.current.commandId && ref.current.isMounted)) {
             return;
         }
 
         setResult(
             (ref.current.result = {
                 error: null,
+                done: false,
                 loading: true
             })
         );
@@ -80,6 +95,7 @@ export const useCommand = <TError = [ValidationError]>(
             setResult(
                 (ref.current.result = {
                     error: null,
+                    done: true,
                     loading: false
                 })
             );
@@ -87,6 +103,7 @@ export const useCommand = <TError = [ValidationError]>(
             setResult(
                 (ref.current.result = {
                     error,
+                    done: false,
                     loading: false
                 })
             );

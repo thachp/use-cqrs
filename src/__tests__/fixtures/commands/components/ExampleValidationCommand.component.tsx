@@ -9,8 +9,15 @@ export const ExampleValidationCommandComponent = () => {
     const [{ loading, error }, command] = useCommand<[ValidationError]>();
 
     // if errors, display them
+
     if (error) {
-        return <div data-testid="errors">Errors...</div>;
+        return (
+            <div data-testid="errors">
+                {error.map((e) => (
+                    <div key={e.property}>{e.property}</div>
+                ))}
+            </div>
+        );
     }
 
     // if loading, display loading

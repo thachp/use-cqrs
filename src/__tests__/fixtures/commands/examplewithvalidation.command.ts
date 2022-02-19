@@ -1,10 +1,11 @@
-import { Contains, MaxLength, MinLength } from "class-validator";
+import { MaxLength, MinLength, Validate } from "class-validator";
 
 import { Injectable } from "../../..";
 import { CommandHandler, ICommand, ICommandHandler } from "../../../cqrs";
+import { MatchTextValidator } from "../validators/matchtext.validator";
 
 export class ExampleWithValidationCommand implements ICommand {
-    @Contains("hello")
+    @Validate(MatchTextValidator)
     public readonly hello: string;
 
     @MinLength(2)

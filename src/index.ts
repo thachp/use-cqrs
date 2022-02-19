@@ -4,5 +4,6 @@ export * from "./event.hook";
 export * from "./query.hook";
 export * from "./cqrs";
 export * from "./cqrs.provider";
+export * from "./utils/errorsFormatter";
 
-export { Service as Injectable } from "typedi";
+export { Service as Injectable, Inject } from "typedi";

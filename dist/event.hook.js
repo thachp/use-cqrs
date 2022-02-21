@@ -27,11 +27,14 @@ const useEvent = (name$, validatorOptions) => {
         error: null,
         data: null
     });
+    const mountedRef = React.useRef(true);
     const eventBus = typedi_1.Container.get(cqrs_1.EventBus);
     // event emitter
     const emit = React.useCallback((event) => __awaiter(void 0, void 0, void 0, function* () {
         // validate fields before sending the event to the event bus
         const errors = yield (0, class_validator_1.validate)(event, validatorOptions);
+        if (!mountedRef.current)
+            return null;
         // if there are errors, set the state to the errors
         if (errors.length > 0) {
             return setEvent({
@@ -54,6 +57,7 @@ const useEvent = (name$, validatorOptions) => {
             // unsubscribe from the event when the component unmounts
             // this is important to avoid memory leaks
             eventBus.unsubscribe(name$);
+            mountedRef.current = false;
         };
     }, []);
     return [event, emit];

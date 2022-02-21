@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useCqrs = exports.CqrsModule = void 0;
+const class_validator_1 = require("class-validator");
 const typedi_1 = require("typedi");
 const command_bus_1 = require("./cqrs/command-bus");
 const event_bus_1 = require("./cqrs/event-bus");
@@ -35,5 +36,7 @@ CqrsModule = __decorate([
         query_bus_1.QueryBus])
 ], CqrsModule);
 exports.CqrsModule = CqrsModule;
+// inject dependencies into custom validator constraint classes
+(0, class_validator_1.useContainer)(typedi_1.Container, { fallbackOnErrors: true });
 exports.useCqrs = typedi_1.Container.get(CqrsModule);
 exports.default = exports.useCqrs;

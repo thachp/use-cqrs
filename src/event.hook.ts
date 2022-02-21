@@ -26,12 +26,15 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
         data: null
     });
 
+    const mountedRef = React.useRef(true);
     const eventBus = IoC.get(EventBus);
 
     // event emitter
     const emit = React.useCallback(async (event: IEvent) => {
         // validate fields before sending the event to the event bus
         const errors = await validate(event, validatorOptions);
+
+        if (!mountedRef.current) return null;
 
         // if there are errors, set the state to the errors
         if (errors.length > 0) {
@@ -59,6 +62,8 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
             // unsubscribe from the event when the component unmounts
             // this is important to avoid memory leaks
             eventBus.unsubscribe(name$);
+
+            (mountedRef as any).current = false;
         };
     }, []);
 

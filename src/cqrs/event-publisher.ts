@@ -1,4 +1,5 @@
-import { Injectable } from "..";
+import { Service as Injectable } from "typedi";
+
 import { AggregateRoot } from "./aggregate-root";
 import { EventBus } from "./event-bus";
 import { IEvent } from "./interfaces";

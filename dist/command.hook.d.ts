@@ -2,6 +2,7 @@ import { ValidationError, ValidatorOptions } from "class-validator";
 import { ICommand } from "./cqrs";
 export interface ICommandResults<TError> {
     loading: boolean;
+    done: boolean;
     error: TError | Array<ValidationError>;
 }
 /**

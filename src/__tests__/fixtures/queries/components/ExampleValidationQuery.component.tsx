@@ -5,10 +5,18 @@ import { ExampleValidationQuery } from "../examplevalidation.query";
 
 export const ExampleValidationComponent = () => {
     // Query hook
-    const [{ loading, error }] = useQuery<[ExampleValidationQuery], any>(new ExampleValidationQuery(-1000, 1000));
+    const [{ loading, error }] = useQuery<[ExampleValidationQuery], any>(
+        new ExampleValidationQuery(-1000, 1000, "failed-validation")
+    );
 
-    if (error && error.length > 0) {
-        return <div>Errors...</div>;
+    if (error) {
+        return (
+            <div data-testid="errors">
+                {error.map((e) => (
+                    <div key={e.property}>{e.property}</div>
+                ))}
+            </div>
+        );
     }
 
     if (loading) {

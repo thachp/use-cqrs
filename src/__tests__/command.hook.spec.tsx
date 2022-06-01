@@ -1,7 +1,9 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
 
 import { ExampleCommandComponent } from "./fixtures/commands/components/ExampleCommand.component";
+import { ExampleWithInjectionComponent } from "./fixtures/commands/components/ExampleInjectionCommand.component";
+import { ExampleValidationCommandComponent } from "./fixtures/commands/components/ExampleValidationCommand.component";
 
 describe("Test Command Hook", () => {
     test("should render initial view", async () => {
@@ -13,28 +15,28 @@ describe("Test Command Hook", () => {
         expect(screen.getByTestId("more").textContent).toBe("DoSomething");
     });
 
-    // test("should render errors given the command has validation errors", async () => {
-    //     // arrange
-    //     await act(async () => render(<ExampleValidationCommandComponent />));
+    test("should render errors given the command has validation errors", async () => {
+        // arrange
+        await act(async () => render(<ExampleValidationCommandComponent />));
 
-    //     // act
-    //     fireEvent.click(screen.getByTestId("more"));
+        // act
+        fireEvent.click(screen.getByTestId("more"));
 
-    //     // assert
-    //     await waitFor(() => screen.getByTestId("errors"));
-    //     expect(screen.getByTestId("errors").textContent).toContain("hello");
-    //     expect(screen.getByTestId("errors").textContent).toContain("name");
-    // });
+        // assert
+        await waitFor(() => screen.getByTestId("errors"));
+        expect(screen.getByTestId("errors").textContent).toContain("hello");
+        expect(screen.getByTestId("errors").textContent).toContain("name");
+    });
 
-    // test("should render errors from an injected class", async () => {
-    //     // arrange
-    //     await act(async () => render(<ExampleWithInjectionComponent />));
+    test("should render errors from an injected class", async () => {
+        // arrange
+        await act(async () => render(<ExampleWithInjectionComponent />));
 
-    //     // act
-    //     fireEvent.click(screen.getByTestId("more"));
+        // act
+        fireEvent.click(screen.getByTestId("more"));
 
-    //     // assert
-    //     await waitFor(() => screen.getByTestId("errors"));
-    //     expect(screen.getByTestId("errors").textContent).toContain("Method not implemented");
-    // });
+        // assert
+        await waitFor(() => screen.getByTestId("errors"));
+        expect(screen.getByTestId("errors").textContent).toContain("Method not implemented");
+    });
 });

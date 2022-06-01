@@ -9,21 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExampleValidationInput = void 0;
-const class_validator_1 = require("class-validator");
-class ExampleValidationInput {
-    constructor(hello, name) {
-        this.hello = hello;
-        this.name = name;
+exports.ExampleService = void 0;
+const typedi_1 = require("typedi");
+let ExampleService = class ExampleService {
+    constructor() { }
+    doSomething() {
+        return "Hello world!";
     }
-}
-__decorate([
-    (0, class_validator_1.Contains)("hello"),
-    __metadata("design:type", String)
-], ExampleValidationInput.prototype, "hello", void 0);
-__decorate([
-    (0, class_validator_1.Length)(4, 30),
-    __metadata("design:type", String)
-], ExampleValidationInput.prototype, "name", void 0);
-exports.ExampleValidationInput = ExampleValidationInput;
-exports.default = ExampleValidationInput;
+};
+ExampleService = __decorate([
+    (0, typedi_1.Service)(),
+    __metadata("design:paramtypes", [])
+], ExampleService);
+exports.ExampleService = ExampleService;

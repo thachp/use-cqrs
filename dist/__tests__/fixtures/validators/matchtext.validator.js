@@ -9,21 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExampleValidationInput = void 0;
+exports.MatchTextValidator = void 0;
 const class_validator_1 = require("class-validator");
-class ExampleValidationInput {
-    constructor(hello, name) {
-        this.hello = hello;
-        this.name = name;
+const typedi_1 = require("typedi");
+const example_service_1 = require("../services/example.service.");
+let MatchTextValidator = class MatchTextValidator {
+    constructor(exampleService) {
+        this.exampleService = exampleService;
     }
-}
-__decorate([
-    (0, class_validator_1.Contains)("hello"),
-    __metadata("design:type", String)
-], ExampleValidationInput.prototype, "hello", void 0);
-__decorate([
-    (0, class_validator_1.Length)(4, 30),
-    __metadata("design:type", String)
-], ExampleValidationInput.prototype, "name", void 0);
-exports.ExampleValidationInput = ExampleValidationInput;
-exports.default = ExampleValidationInput;
+    validate(text) {
+        return this.exampleService.doSomething() === text;
+    }
+    defaultMessage() {
+        return "Text does not match!";
+    }
+};
+MatchTextValidator = __decorate([
+    (0, class_validator_1.ValidatorConstraint)({ name: "MatchTextValidator", async: false }),
+    (0, typedi_1.Service)(),
+    __metadata("design:paramtypes", [example_service_1.ExampleService])
+], MatchTextValidator);
+exports.MatchTextValidator = MatchTextValidator;

@@ -1,7 +1,6 @@
 import { MaxLength, MinLength, Validate } from "class-validator";
 
-import { Injectable } from "../../..";
-import { CommandHandler, ICommand, ICommandHandler } from "../../../cqrs";
+import { ICommand, ICommandHandler, Injectable } from "../../../cqrs";
 import { MatchTextValidator } from "../validators/matchtext.validator";
 
 export class ExampleWithValidationCommand implements ICommand {
@@ -18,12 +17,11 @@ export class ExampleWithValidationCommand implements ICommand {
     }
 }
 
-@Injectable()
-@CommandHandler(ExampleWithValidationCommand)
+@Injectable(ExampleWithValidationCommand)
 export class ExampleWithValidationCommandHandler implements ICommandHandler<ExampleWithValidationCommand> {
     constructor() {}
 
-    async execute(command: ExampleWithValidationCommand) {
+    async handle(command: ExampleWithValidationCommand) {
         const { hello, name } = command;
         console.log("example-command-withvalidation", hello, name);
     }

@@ -1,7 +1,7 @@
 import { ValidationError } from "class-validator";
 import * as React from "react";
 
-import { useCommand } from "../../../../command.hook";
+import { useCommand } from "../../../..";
 import { ExampleWithValidationCommand } from "../examplewithvalidation.command";
 
 export const ExampleValidationCommandComponent = () => {

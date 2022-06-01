@@ -7,7 +7,7 @@
         "noUnusedLocals": false,
         "removeComments": false,
         "noLib": false,
-        "emitDecoratorMetadata": true,
+        "emitDecoratorMetadata": true,        
         "experimentalDecorators": true,
         "target": "es6",
         "sourceMap": false,
@@ -19,7 +19,6 @@
     ],
     "exclude": [
         "node_modules",
-        "src/__tests__",
         "**/*.spec.ts",
         "**/*.d.ts"
     ]

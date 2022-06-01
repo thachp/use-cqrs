@@ -1,9 +1,9 @@
 import { equal } from "@wry/equality";
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
-import { Container as IoC } from "typedi";
 
-import { CommandBus, ICommand } from "./cqrs";
+import cqrs from "../../cqrs.config";
+import { ICommand } from "../command.interface";
 
 export interface ICommandResults<TError> {
     loading: boolean;
@@ -36,8 +36,6 @@ export const useCommand = <TError = [ValidationError]>(
         validatorOptions,
         isMounted: true
     });
-
-    const commandBus = IoC.get(CommandBus);
 
     /**
      * Send the command to the command bus.
@@ -91,7 +89,7 @@ export const useCommand = <TError = [ValidationError]>(
         );
 
         try {
-            await commandBus.execute(commandToSend);
+            await cqrs.send(commandToSend);
             setResult(
                 (ref.current.result = {
                     error: null,

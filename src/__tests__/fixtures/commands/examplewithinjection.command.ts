@@ -1,6 +1,5 @@
-import { Service as Injectable } from "typedi";
-
-import { CommandHandler, ICommand, ICommandHandler } from "../../../cqrs";
+import { ICommand, ICommandHandler } from "../../..";
+import { Injectable } from "../../../cqrs";
 
 @Injectable()
 class ExampleInjectedService {
@@ -13,12 +12,11 @@ export class ExampleWithInjectionCommand implements ICommand {
     constructor(public readonly hello: string, public readonly name: string) {}
 }
 
-@Injectable()
-@CommandHandler(ExampleWithInjectionCommand)
+@Injectable(ExampleWithInjectionCommand)
 export class ExampleWithInjectionCommandHandler implements ICommandHandler<ExampleWithInjectionCommand> {
     constructor(public readonly exampleInjectedService: ExampleInjectedService) {}
 
-    async execute(command: ExampleWithInjectionCommand) {
+    async handle(command: ExampleWithInjectionCommand) {
         const { hello, name } = command;
 
         console.log("example-command-withinjection", hello, name);

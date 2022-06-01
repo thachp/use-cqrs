@@ -1,8 +1,8 @@
 import { validate, ValidationError, ValidatorOptions } from "class-validator";
 import * as React from "react";
-import { Container as IoC } from "typedi";
 
-import { EventBus, IEvent } from "./cqrs";
+import cqrs from "../../cqrs.config";
+import { IEvent } from "../event.interface";
 
 export interface IEventResults<TData = any, TError = any> {
     error: TError;
@@ -27,7 +27,6 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
     });
 
     const mountedRef = React.useRef(true);
-    const eventBus = IoC.get(EventBus);
 
     // event emitter
     const emit = React.useCallback(async (event: IEvent) => {
@@ -44,26 +43,25 @@ export const useEvent = <TEvent = IEvent, TError = [ValidationError]>(
             });
         }
 
-        // emit the event
-        eventBus.publish(event);
+        try {
+            const results = await cqrs.publish(event);
+            return setEvent({
+                data: results,
+                error: null
+            });
+        } catch (error: any) {
+            return setEvent({
+                data: null,
+                error
+            });
+        }
     }, []);
 
     React.useEffect(() => {
-        // subscribe to the event by event name and update the state
-        eventBus.ofEventName(name$).subscribe({
-            next: (event) =>
-                setEvent({
-                    data: event,
-                    error: null
-                })
-        });
-
+        emit(event);
         return () => {
-            // unsubscribe from the event when the component unmounts
-            // this is important to avoid memory leaks
-            eventBus.unsubscribe(name$);
-
-            (mountedRef as any).current = false;
+            // unmounting
+            mountedRef.current = false;
         };
     }, []);
 

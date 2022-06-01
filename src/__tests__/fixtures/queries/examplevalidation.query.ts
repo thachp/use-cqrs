@@ -1,7 +1,6 @@
 import { IsNumber, Max, Min, Validate } from "class-validator";
-import { Service as Injectable } from "typedi";
 
-import { IQuery, IQueryHandler, QueryHandler } from "../../../cqrs";
+import { Injectable, IQuery, IQueryHandler } from "../../..";
 import { MatchTextValidator } from "../validators/matchtext.validator";
 
 export interface ExampleQueryDataItem {
@@ -29,10 +28,9 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
-@Injectable()
-@QueryHandler(ExampleValidationQuery)
+@Injectable(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
-    async process(query: ExampleValidationQuery) {
+    async handle(query: ExampleValidationQuery) {
         const { skip, take } = query;
 
         console.log("examplevalidation-query", skip, take);

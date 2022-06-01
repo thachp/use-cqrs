@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useQuery } from "../../../../query.hook";
+import { useQuery } from "../../../..";
 import { ExampleQuery, ExampleQueryDataItem } from "../example.query";
 
 export const ExampleQueryComponent = () => {
@@ -14,6 +14,8 @@ export const ExampleQueryComponent = () => {
     if (loading) {
         return <div>Loading...</div>;
     }
+
+    console.log("testing", data);
 
     return (
         <div>

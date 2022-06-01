@@ -1,10 +1,8 @@
-import "reflect-metadata";
-
 import * as Validator from "class-validator";
 import * as React from "react";
-import { Container as IoC } from "typedi";
 
-import { IQuery, QueryBus } from "./cqrs";
+import { cqrs } from "../../cqrs.config";
+import { IQuery } from "../query.interface";
 
 export interface IQueryResults<TData, TError> {
     loading: boolean;
@@ -25,18 +23,13 @@ export const useQuery = <TData = any, TError = [Validator.ValidationError]>(
     query: IQuery,
     validatorOptions?: Validator.ValidatorOptions
 ): [IQueryResults<TData, TError>, (query: IQuery) => void] => {
-    const [result, setResult] = React.useState<{
-        loading: boolean;
-        data: TData;
-        error: TError | Array<Validator.ValidationError>;
-    }>({
+    const [result, setResult] = React.useState<IQueryResults<TData, TError>>({
         loading: true,
         data: null,
         error: null
     });
 
     const mountedRef = React.useRef(true);
-    const queryBus = IoC.get(QueryBus);
 
     // for lazy loading
     const process = React.useCallback(async (query: IQuery) => {
@@ -53,7 +46,8 @@ export const useQuery = <TData = any, TError = [Validator.ValidationError]>(
         }
 
         try {
-            const results = await queryBus.process(query);
+            const results = await cqrs.send<TData>(query);
+
             return setResult({
                 loading: false,
                 data: results,

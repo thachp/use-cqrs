@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useQuery } from "../../../../query.hook";
+import { useQuery } from "../../../..";
 import { ExampleValidationInjectionQuery } from "../examplewithvalidationinjection.query";
 
 export const ExampleValidationInjectionComponent = () => {

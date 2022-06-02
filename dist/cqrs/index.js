@@ -11,6 +11,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
+__exportStar(require("./event.publisher"), exports);
 __exportStar(require("./hooks/command.hook"), exports);
 __exportStar(require("./hooks/query.hook"), exports);
 __exportStar(require("./query.interface"), exports);

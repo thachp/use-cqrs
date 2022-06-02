@@ -1,6 +1,6 @@
 {
   "name": "use-cqrs",
-  "version": "1.1.11-alpha",
+  "version": "1.2.1-alpha",
   "description": "React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development",
   "keywords": [
     "cqrs",
@@ -67,9 +67,7 @@
     "@wry/equality": "^0.5.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
-    "iterare": "^1.2.1",
     "mediatr-ts": "^0.2.1",
     "typedi": "^0.10.0"
-
   }
 }

@@ -1,3 +1,3 @@
-export * from "./utils/errorsFormatter";
+import "reflect-metadata";
 export * from "./cqrs.config";
 export * from "./cqrs";

@@ -1,4 +1,5 @@
 import "reflect-metadata";
+export * from "./event.publisher";
 export * from "./hooks/command.hook";
 export * from "./hooks/query.hook";
 export * from "./query.interface";

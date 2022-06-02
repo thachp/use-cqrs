@@ -3,11 +3,10 @@
 
 # useCQRS
 
-useCQRS is a React hooks library for applying Command and Query Responsibility Segregation (CQRS) design pattern and Single Responsibility Principle (SRP) in frontend development. It consists of three react hooks: useCommand(), useQuery(), and useEvent().
+useCQRS is a React hooks library for applying Command and Query Responsibility Segregation (CQRS) design pattern and Single Responsibility Principle (SRP) in frontend development. It consists of two react hooks: useCommand() and useQuery().
 
 -   Use the useCommand() hook to do something.
 -   Use the useQuery() hook to ask for something.
--   Use the useEvent() hook to react to what has been done.
 
 ## Motivations
 
@@ -18,7 +17,6 @@ This package will be considered a success if the following goals are achieved:
 2. Apply Single Responsibility Principle (SRP) in developing React components. SRP is one of the SOLID principles, which states that a "module should be responsible to one, and only one, actor (Martin, 2017)".
 
     - A component should use either the useCommand() or useQuery hook but never both hooks.
-    - A component may use multiple useEvent() but keep the count minimal.
 
 ## Installing
 
@@ -47,18 +45,6 @@ Add these settings to your tsconfig.json
 
 ## Getting started
 
-```typescript
-import { useCqrs } from "use-cqrs";
-
-// register handlers on start
-useCqrs.initialize({
-    queries: [ExampleValidationQueryHandler],
-    commands: [],
-    events: [],
-    sagas: []
-});
-```
-
 Ask something with useQuery()
 
 ```typescript
@@ -79,19 +65,9 @@ const [{ error, loading, done }, execute] = useCommand<ErrorType>();
 execute(new WhateverCommand(value));
 ```
 
-React to something with useEvent()
-
-```typescript
-// setup and destructure
-const [{ data, error }, emit] = useEvent<DataType, ErrorType>(nameOf<WhateverChanged>());
-
-// optionally, invoke emit to publish an event
-emit(new SomethingChanged(value));
-```
-
 ## How it works?
 
-![arch](https://user-images.githubusercontent.com/1495371/147893504-42a50f72-293a-4dc0-bf29-3c5a568f36f6.png)
+![arch](https://user-images.githubusercontent.com/1495371/171541707-4337418d-b57b-4aec-9bef-4069f6f2632f.png)
 
 ## Examples
 
@@ -99,7 +75,7 @@ Each query, command, and event must have its corresponding handler. Below are ex
 You may use validation decorators to perform field validation and inject classes into the handler.
 
 ```typescript
-import { IQuery, IQueryHandler, Injectable, AggregateRoot } from "use-cqrs";
+import { IQuery, IQueryHandler, Injectable } from "use-cqrs";
 import { IsNumber, Max, Min } from "class-validator";
 
 export interface ExampleQueryDataItem {
@@ -111,7 +87,7 @@ export interface ExampleQueryDataItem {
 // AnyGraphQLClient is injected into ExampleModel
 
 @Injectable()
-class ExampleModel extends AggregateRoot {
+class ExampleModel  {
     constructor(public readonly client: AnyGraphQLClient);
 
     querySomething() {
@@ -136,10 +112,8 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
-// Register the handler with Injectable and QueryHandler decorators,
-// so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
-@Injectable()
-@QueryHandler(ExampleValidationQuery)
+// Register the handler with the Injectable decorator so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
+@Injectable(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
     // ExampleModel is injectable
     constructor(public readonly exampleModel: ExampleModel) {}
@@ -176,7 +150,7 @@ Use the useQuery() hook to dispatch the Query message, which will be consumed by
 In this example, ExampleValidationQueryHandler will be called when the component first render and when the user clicks on the More button.
 
 ```typescript
-import { useQuery } from "use-cqrs";
+import { useQuery, Injectable } from "use-cqrs";
 import { ExampleValidationQuery } from "../examplevalidation.query";
 
 export const ExampleQueryComponent = () => {
@@ -225,7 +199,8 @@ useCQRS is dependent on the following modules:
 -   [ReactJS](https://github.com/facebook/react) A declarative, efficient, and flexible JavaScript library for building user interfaces
 -   [TypeDI](https://github.com/typestack/typedi) Simple yet powerful dependency injection tool for JavaScript and TypeScript
 -   [Class-validator](https://github.com/typestack/class-validator) Decorator-based property validation for classes
--   [RxJS](https://github.com/ReactiveX/rxjs) A reactive programming library for JavaScript
+-   [Mediatr-ts](https://github.com/m4ss1m0g/mediatr-ts) Porting to typescript of the famous MediatR for C#
+
 
 ## References
 
@@ -235,13 +210,6 @@ useCQRS is dependent on the following modules:
 -   Greg Young - CQRS and Event Sourcing - Code on the Beach 2014. (2014, September 8). [Video]. YouTube. https://www.youtube.com/watch?v=JHGkaShoyNs
 -   Martin, R. C., O’Brien, T., & Books, U. (2017). Clean Architecture: A Craftsman’s Guide to Software Structure and Design. Upfront Books.
 -   Khorikov, V. (2018, October 18). CQRS in Practice. Pluralsight.com. Retrieved January 3, 2022, from https://www.pluralsight.com/courses/cqrs-in-practice?aid=7010a000001xAKZAA2
-
--   Van Veen, B. (2019, March 1). Different kinds of service bus: command bus, service bus and query bus. Barry van Veen. Retrieved January 9, 2022, from https://barryvanveen.nl/articles/59-different-kinds-of-service-bus-command-bus-service-bus-and-query-bus
-
-## Credits
-
-Initially, the project forks from the [@nestjs/cqrs](https://github.com/nestjs/cqrs) module for NestJS Framework server-side development. The code has been repurposed to work on the client-side as ReactJS hooks.
-Thanks [@kamilmysliwiec](https://github.com/kamilmysliwiec)
 
 ## License
 

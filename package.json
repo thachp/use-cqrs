@@ -1,6 +1,6 @@
 {
   "name": "use-cqrs",
-  "version": "1.2.1-alpha",
+  "version": "1.2.2-beta",
   "description": "React hooks library for applying CQRS design patterns and Single Responsibility Principle (SRP) in frontend development",
   "keywords": [
     "cqrs",

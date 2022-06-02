@@ -3,10 +3,14 @@
 
 # useCQRS
 
-useCQRS is a React hooks library for applying Command and Query Responsibility Segregation (CQRS) design pattern and Single Responsibility Principle (SRP) in frontend development. It consists of two react hooks: useCommand() and useQuery().
+useCQRS is a React hooks library for applying Command and Query Responsibility Segregation (CQRS) design pattern and Single Responsibility Principle (SRP) in frontend development.
 
--   Use the useCommand() hook to do something.
--   Use the useQuery() hook to ask for something.
+useCQRS contains:
+
+-   Essential classes for defining CQRS types and handlers
+-   Dependency Injection with Type-DI to help build testable applications
+-   Attribute validators with class-validator
+-   Two react hooks for use in React components: useCommand() and useQuery(). Use the useCommand() hook to do something. Use the useQuery() hook to ask for something.
 
 ## Motivations
 
@@ -20,16 +24,10 @@ This package will be considered a success if the following goals are achieved:
 
 ## Installing
 
-Using npm
+Using npm or yarn
 
 ```bash
-npm install use-cqrs
-```
-
-Using yarn
-
-```bash
-yarn add use-cqrs
+npm install use-cqrs or yarn add use-cqrs
 ```
 
 Add these settings to your tsconfig.json
@@ -45,14 +43,101 @@ Add these settings to your tsconfig.json
 
 ## Getting started
 
+### Define an Event and the EventHandler
+
+```typescript
+import { IEvent, IEventHandler, Injectable } from "use-cqrs";
+
+export class ExampleEvent implements IEvent {
+    constructor(public readonly hello: string, public readonly name: string) {}
+}
+
+@Injectable(ExampleEvent)
+export class ExampleEventHandler implements IEventHandler<ExampleEvent> {
+    constructor() {}
+
+    async handle(event: ExampleEvent) {
+        const { hello, name } = event;
+
+        console.log("example-event", hello, name);
+    }
+}
+```
+
+### Define a Query and the QueryHandler
+
+For more query examples, checkout the queries directory in [\_\_tests\_\_/fixtures/queries](https://github.com/thachp/use-cqrs/tree/main/src/__tests__/fixtures/queries)
+
+```typescript
+import { IQuery, IQueryHandler, Injectable } from "use-cqrs";
+import { IsNumber, Max, Min } from "class-validator";
+
+export class ExampleQuery implements IQuery {
+    // use-CQRS support attribute validation using class-validator
+    @Min(0)
+    public readonly skip: number;
+
+    @Max(10)
+    @Min(0)
+    public readonly take: number;
+
+    constructor(skip: number = 0, take: number = 1) {
+        this.skip = skip;
+        this.take = take;
+    }
+}
+
+// Use the @Injectable decorator to register the handler class into Type-DI container.
+@Injectable(ExampleQuery)
+export class ExampleQueryHandler implements IQueryHandler<ExampleQuery> {
+    // ExampleModel is injectable
+    constructor(public readonly exampleModel: ExampleModel) {}
+
+    // business logic here
+    async handle(query: ExampleQuery) {
+        const { skip, take } = query;
+        // business logic
+    }
+}
+```
+
+### Define a Command, the CommandHandler, and publish event(s)
+
+For more command examples, checkout the command directory in [\_\_tests\_\_/fixtures/commands](https://github.com/thachp/use-cqrs/tree/main/src/__tests__/fixtures/commands)
+
+```typescript
+import { ICommand, ICommandHandler, Injectable, EventPublisher } from "use-cqrs";
+
+export class ExampleCommand implements ICommand {
+    constructor(public readonly hello: string, public readonly name: string) {}
+}
+
+@Injectable(ExampleCommand)
+export class ExampleCommandHandler implements ICommandHandler<ExampleCommand> {
+    constructor(private readonly _eventBus: EventPublisher) {}
+
+    async handle(command: ExampleCommand) {
+        const { hello, name } = command;
+
+        console.log("example-command", hello, name);
+
+        // single event
+        this._eventBus.publish(new ExampleEvent());
+
+        // multiple events
+        // this._eventBus.publishAll([new ExampleEvent(), new OtherEvent()]);
+    }
+}
+```
+
 Ask something with useQuery()
 
 ```typescript
 // setup, invoke, and destructure
-const [{ data, error, loading }, process] = useQuery<DataType, ErrorType>(new WhateverQuery(value));
+const [{ data, error, loading }, process] = useQuery<DataType, ErrorType>(new ExampleQuery(value));
 
 // optionally, invoke process to lazy load with different parameters
-process(new WhateverQuery(newValue));
+process(new ExampleQuery(newValue));
 ```
 
 Do something with useCommand()
@@ -62,7 +147,7 @@ Do something with useCommand()
 const [{ error, loading, done }, execute] = useCommand<ErrorType>();
 
 // invoke execute to do something
-execute(new WhateverCommand(value));
+execute(new ExampleCommand(value));
 ```
 
 ## How it works?
@@ -87,7 +172,7 @@ export interface ExampleQueryDataItem {
 // AnyGraphQLClient is injected into ExampleModel
 
 @Injectable()
-class ExampleModel  {
+class ExampleModel {
     constructor(public readonly client: AnyGraphQLClient);
 
     querySomething() {
@@ -119,7 +204,7 @@ export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValid
     constructor(public readonly exampleModel: ExampleModel) {}
 
     // business logic here
-    async process(query: ExampleValidationQuery) {
+    async handle(query: ExampleValidationQuery) {
         const { skip, take } = query;
 
         // invoke injected service class
@@ -200,7 +285,6 @@ useCQRS is dependent on the following modules:
 -   [TypeDI](https://github.com/typestack/typedi) Simple yet powerful dependency injection tool for JavaScript and TypeScript
 -   [Class-validator](https://github.com/typestack/class-validator) Decorator-based property validation for classes
 -   [Mediatr-ts](https://github.com/m4ss1m0g/mediatr-ts) Porting to typescript of the famous MediatR for C#
-
 
 ## References
 

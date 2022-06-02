@@ -1,10 +1,4 @@
 "use strict";
-/*
- * Nest CQRS Module
- * Copyright(c) 2017-... Kamil Mysliwiec
- * www.kamilmysliwiec.com
- * MIT Licensed
- */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -16,13 +10,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./aggregate-root"), exports);
-__exportStar(require("./command-bus"), exports);
-__exportStar(require("./decorators"), exports);
-__exportStar(require("./event-bus"), exports);
-__exportStar(require("./event-publisher"), exports);
-__exportStar(require("./exceptions"), exports);
-__exportStar(require("./interfaces"), exports);
-__exportStar(require("./operators"), exports);
-__exportStar(require("./query-bus"), exports);
-__exportStar(require("./utils"), exports);
+require("reflect-metadata");
+__exportStar(require("./hooks/command.hook"), exports);
+__exportStar(require("./hooks/query.hook"), exports);
+__exportStar(require("./query.interface"), exports);
+__exportStar(require("./command.interface"), exports);
+__exportStar(require("./event.interface"), exports);
+__exportStar(require("./injectable.decorator"), exports);

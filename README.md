@@ -27,7 +27,7 @@ This package will be considered a success if the following goals are achieved:
 Using npm or yarn
 
 ```bash
-npm install use-cqrs or yarn add use-cqrs
+[npm install | yarn add] use-cqrs
 ```
 
 Add these settings to your tsconfig.json
@@ -94,9 +94,10 @@ export class ExampleQueryHandler implements IQueryHandler<ExampleQuery> {
     constructor(public readonly exampleModel: ExampleModel) {}
 
     // business logic here
-    async handle(query: ExampleQuery) {
+    async handle(query: ExampleQuery): any[] {
         const { skip, take } = query;
         // business logic
+        return [...data]
     }
 }
 ```
@@ -114,6 +115,8 @@ export class ExampleCommand implements ICommand {
 
 @Injectable(ExampleCommand)
 export class ExampleCommandHandler implements ICommandHandler<ExampleCommand> {
+
+    //  inject EventPublisher in order to publish events
     constructor(private readonly _eventBus: EventPublisher) {}
 
     async handle(command: ExampleCommand) {
@@ -154,10 +157,10 @@ execute(new ExampleCommand(value));
 
 ![arch](https://user-images.githubusercontent.com/1495371/171541707-4337418d-b57b-4aec-9bef-4069f6f2632f.png)
 
-## Examples
+## Detail Example
 
 Each query, command, and event must have its corresponding handler. Below are examples of classes for a query and its handler.
-You may use validation decorators to perform field validation and inject classes into the handler.
+You may use validation decorators to perform field validation and inject classes into the handler via the constructor.
 
 ```typescript
 import { IQuery, IQueryHandler, Injectable } from "use-cqrs";
@@ -197,7 +200,9 @@ export class ExampleValidationQuery implements IQuery {
     }
 }
 
-// Register the handler with the Injectable decorator so that useCQRS know to map ExampleValidationQuery to ExampleValidationQueryHandler
+// Register the handler with the Injectable decorator so that useCQRS 
+// know to map ExampleValidationQuery to ExampleValidationQueryHandler
+
 @Injectable(ExampleValidationQuery)
 export class ExampleValidationQueryHandler implements IQueryHandler<ExampleValidationQuery> {
     // ExampleModel is injectable
